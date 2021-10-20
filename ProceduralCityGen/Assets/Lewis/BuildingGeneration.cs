@@ -13,7 +13,7 @@ public static class BuildingGeneration
                     new RectInt(0,0,4,4),
                     new Floor[]
                     {
-                        new Floor(0, new Wall[(4 + 4) * 2])
+                        new Floor(0, new Wall[16])
                     },
                     new Roof(RoofType.Flat, RoofDirection.North)
                     )

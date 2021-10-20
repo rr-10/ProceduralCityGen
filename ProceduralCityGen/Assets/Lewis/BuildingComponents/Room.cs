@@ -23,5 +23,4 @@ public class Room
         this.floors = floors;
         this.roof = roof;
     }
- 
 }

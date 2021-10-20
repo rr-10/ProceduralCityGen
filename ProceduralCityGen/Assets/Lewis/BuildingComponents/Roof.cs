@@ -18,9 +18,9 @@ public class Roof : MonoBehaviour
 }
 
 public enum RoofType { 
+    Flat,
     Pyrimid,
-    FrontGabel,
-    Flat
+    FrontGabel
 }
 
 public enum RoofDirection { 
