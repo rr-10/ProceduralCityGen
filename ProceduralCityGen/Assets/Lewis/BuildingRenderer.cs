@@ -21,7 +21,7 @@ public class BuildingRenderer : MonoBehaviour
         }
     }
 
-    private RenderRoom(Room room)
+    private void RenderRoom(Room room)
     {
         Transform roomFolder = new GameObject("Rooms").transform;
         roomFolder.SetParent(buildingFolder);
@@ -29,16 +29,18 @@ public class BuildingRenderer : MonoBehaviour
         {
             RenderFloor(floor, room, roomFolder);
         }
+        RenderRoof(room, roomFolder);
     }
 
-    private RenderFloor(Floor floor, Room room, Transform roomFolder)
+    private void RenderFloor(Floor floor, Room room, Transform roomFolder)
     {
         Transform floorFolder = new GameObject("Floors").transform;
         floorFolder.SetParent(roomFolder);
 
-        for(int x = 0; room.Bounds.min.x; x < room.Bounds.max.x; x++)
+
+        for (int x = room.Bounds.min.x; x < room.Bounds.max.x; x++)
         {
-            for (int y = 0; y < room.Bounds.min.y; y++)
+            for (int y = room.Bounds.min.y; y < room.Bounds.max.y; y++)
             {
                 PlaceGround(x, y, floor.Level, floorFolder);
 
@@ -58,25 +60,25 @@ public class BuildingRenderer : MonoBehaviour
                 else if (y == room.Bounds.min.y + room.Bounds.size.y - 1)
                 {
                     Transform wall = wallPrefab[(int)floor.Walls[x - room.Bounds.min.x]]; //Get the index of the wall at this position
-                    PlaceWall(x * -wallWidth, floor.Level * wallHeight, true, floorFolder, wall)
+                    PlaceWall(x * -wallWidth, floor.Level * wallHeight, true, floorFolder, wall);
                 }
                 //West Wall
                 else if (x == room.Bounds.min.x)
                 {
                     Transform wall = wallPrefab[(int)floor.Walls[x - room.Bounds.min.x]]; //Get the index of the wall at this position
-                    PlaceWall(x * -wallWidth, floor.Level * wallHeight, false, floorFolder, wall)
+                    PlaceWall(x * -wallWidth, floor.Level * wallHeight, false, floorFolder, wall);
                 }
             }
         }
     }
 
-    private PlaceGround(int x, int y, int level, Transform floorFolder)
+    private void PlaceGround(int x, int y, int level, Transform floorFolder)
     {
         Transform f = Instantiate(groundPrefab, floorFolder.TransformPoint(new Vector3(x * -wallWidth, level * wallHeight, y * -wallWidth)), Quaternion.identity);
         f.SetParent(floorFolder);
     }
 
-    private PlaceWall(int x, int y, int z, bool rotate, Tranform floorFolder, Tranform wall)
+    private void PlaceWall(int x, int y, int z, bool rotate, Transform floorFolder, Transform wall)
     {
         Transform w = Instantiate(
             wall,
@@ -85,7 +87,7 @@ public class BuildingRenderer : MonoBehaviour
         w.SetParent(floorFolder);
     }
 
-    private RenderRoof(Room room, Transform roomFolder)
+    private void RenderRoof(Room room, Transform roomFolder)
     {
         //Place Roof above everyroom
         for (int x = room.Bounds.min.x; x < room.Bounds.max.x; x++)
@@ -95,7 +97,7 @@ public class BuildingRenderer : MonoBehaviour
             }
     }
 
-   private PlaceRoof(int x, int y, int level, Tranfrom roomFolder, RoofType type, RoofDirection direction)
+   private void PlaceRoof(int x, int y, int level, Transform roomFolder, RoofType type, RoofDirection direction)
    {
         Transform r;
         r = Instantiate(
@@ -104,7 +106,7 @@ public class BuildingRenderer : MonoBehaviour
                 x * -3f,
                 level * 2.5f,
                 y * -3f)),
-            Quartenion.Euler(0f, rotationOffset[(int)direction].y, 0f);
+            Quartenion.Euler(0f, rotationOffset[(int)direction].y, 0f));
    }
 
     Vector3[] rotationOffset = {
