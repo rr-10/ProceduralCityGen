@@ -15,7 +15,7 @@ public static class BuildingGeneration
                     {
                         new Floor(0, new Wall[16])
                     },
-                    new Roof(RoofType.Flat, RoofDirection.North)
+                    new Roof(RoofType.Pyrimid, RoofDirection.North)
                     )
             });
     }
