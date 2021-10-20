@@ -8,6 +8,6 @@ public class BuildingDemo : MonoBehaviour
     void Start()
     {
         Building b1 = BuildingGeneration.GenerateBuilding();
-        GetComponent<BuildingRenderer>.Render(b1);
+        GetComponent<BuildingRenderer>().Render(b1);
     }
 }
