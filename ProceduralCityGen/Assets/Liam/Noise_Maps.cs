@@ -5,7 +5,7 @@ using UnityEngine;
 public static class Noise_Maps
 {
     //Generate noise map function
-    public static float [,] GenNoiseMap(int Width, int Height,int Seed, float scale, int octaves, float Persistance, float lacunarit, Vector2 OffSet,bool Perlin, bool white, bool cubic)
+    public static float [,] GenNoiseMap(int Width, int Height,int Seed, float scale, int octaves, float Persistance, float lacunarit, Vector2 OffSet,bool Perlin, bool Value, bool White, int baseNoise)
     {
         //Create two sided array to store noise map,
         float[,] Noise_Map = new float[Width, Height];
@@ -23,7 +23,11 @@ public static class Noise_Maps
         }
 
         FastNoise Noise_Generator = new FastNoise();
-        
+        Noise_Generator.SetNoiseType(FastNoise.NoiseType.Cellular);
+        Noise_Generator.SetCellularReturnType(FastNoise.CellularReturnType.CellValue);
+       // Noise_Generator.SetSeed(Seed);
+      //  Noise_Generator.SetInterp(FastNoise.Interp.Linear);
+        //Noise_Generator.
         //float testing = testt.GetWhiteNoise(Width,Height,0,1);
         //Debug.Log (testing);
         //Make sure scale is never dividing by 0
@@ -47,6 +51,12 @@ public static class Noise_Maps
 
 
         //Debug.Log(lacunarit);
+
+
+        
+        scale = (scale / 8.8f);
+
+            
         
         //loop through noise map
         for (int y = 0; y < Height; y++){
@@ -56,7 +66,7 @@ public static class Noise_Maps
                 float freq = 1;
                 float Noise_Height = 0;
 
-                int Noise_Type = 1;
+                
 
                 //Loop through number of octaves / noisemaps
                 for (int i = 0; i < octaves; i++)
@@ -73,27 +83,85 @@ public static class Noise_Maps
                     //can go from -1 to 1
                     //select type of noise from switch
 
-                    float Perlin_Noise;
+                    float Perlin_Noise = 0;
+
                     
-                    switch (Noise_Type)
+                    if (i == 0)
                     {
-                        case 1:
-                            Perlin_Noise = Mathf.PerlinNoise(SampX, SampY) * 2 - 1;
-                            break;
+                        switch (baseNoise)
+                        {
+                            case 1:
+                                Perlin_Noise = Noise_Generator.GetPerlin(SampX, SampY) * 2 ;
+                                break;
 
-                        case 2: 
-                            Perlin_Noise = Noise_Generator.GetValue(SampX, SampY) * 2 - 1;
-                            break;
+                            case 2:
+                                Perlin_Noise = Noise_Generator.GetValue(SampX, SampY) * 2;
+                                break;
 
-                        case 3:
-                            Perlin_Noise = Noise_Generator.GetSimplex(SampX, SampY) * 2 - 1;
-                            break;
+                            case 3:
 
-                        default:
-                            Perlin_Noise = Mathf.PerlinNoise(SampX, SampY) * 2 - 1;
-                            break;
+                                
+                                
+                                //Noise_Generator.SetSeed(lol);
+                                Perlin_Noise = Noise_Generator.GetSimplex(SampX, SampY) * 2;
+                                //Debug.Log(Perlin_Noise);
+                                break;
+
+                            default:
+                                Perlin_Noise = Noise_Generator.GetPerlin(SampX, SampY) * 2;
+                                break;
+
+                        }
+
 
                     }
+                    
+
+                    else
+                    {
+                        
+
+
+                        switch (i % 3)
+                        {
+                            case 0:
+                                if (Perlin == true)
+                                    Perlin_Noise = Noise_Generator.GetPerlin(SampX, SampY) * 2;
+                                else if ( Value == true)
+                                    Perlin_Noise = Noise_Generator.GetValue(SampX, SampY) * 2 ;
+                                else
+                                    Perlin_Noise = Noise_Generator.GetSimplex(SampX, SampY) * 2 ;
+
+                                break;
+
+                            case 1:
+                                if (Value == true)
+                                    Perlin_Noise = Noise_Generator.GetValue(SampX, SampY) * 2 ;
+                                else if (Perlin == true)
+                                    Perlin_Noise = Noise_Generator.GetPerlin(SampX, SampY) * 2;
+                                else
+                                    Perlin_Noise = Noise_Generator.GetSimplex(SampX, 0 ,SampY) * 2 ;
+                                break;
+
+                            case 2:
+                                if (White == true)
+                                    Perlin_Noise = Noise_Generator.GetSimplex(SampX, SampY) * 2;
+                                else if (Perlin == true)
+                                    Perlin_Noise = Noise_Generator.GetPerlin(SampX, SampY) * 2;
+                                else
+                                    Perlin_Noise = Noise_Generator.GetValue(SampX, SampY) * 2 ;
+                                break;
+
+                            default:
+                                Perlin_Noise = Noise_Generator.GetPerlin(SampX, SampY) * 2;
+                                break;
+                        }
+
+                        
+
+                    }
+
+                    
                     
 
                    // float Perlin_Noise = Mathf.PerlinNoise(SampX, SampY) * 2 - 1;
@@ -105,12 +173,8 @@ public static class Noise_Maps
                     freq *= lacunarit;
 
 
-                   Noise_Type += 1;
-
-                    if (Noise_Type > 3)
-                        Noise_Type = 1;
-
-
+                   
+                   
 
 
 
