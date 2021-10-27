@@ -6,6 +6,7 @@ public class DefaultWallRules : WallRules
 {
     public override Wall[] GenerateWalls(BuildingSettings settings, RectInt bounds, int level)
     {
+        return new Wall[(bounds.x + bounds.y) * 4];
         //TODO : Check for level and see if doors can be place 
         //TODO : Create some rules for how many doors should be spawned at that level 
         //TODO : Check if the door should be a larger door or if a normal door is better 

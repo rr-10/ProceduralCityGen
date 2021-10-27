@@ -4,8 +4,5 @@ using UnityEngine;
 
 public abstract class RoofRules : ScriptableObject
 {
-   public abstract Roof GenerateRoof(BuildingSettings settings, RectInt bounds);
-   
-
-   
+   public abstract Roof GenerateRoof(BuildingSettings settings, RectInt bounds);   
 }

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//TODO : Add support for the larger door prefabs 
+
 public class BuildingRenderer : MonoBehaviour
 {
     public Transform groundPrefab;
