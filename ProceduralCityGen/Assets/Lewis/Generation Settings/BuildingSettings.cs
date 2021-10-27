@@ -6,8 +6,8 @@ using UnityEngine;
 public class BuildingSettings : ScriptableObject
 {
     public Vector2Int buildingSize;
-
-
+    public RoofRules roofRule;
+    
     //faster to type getter
     public Vector2Int Size { get => buildingSize; }
     

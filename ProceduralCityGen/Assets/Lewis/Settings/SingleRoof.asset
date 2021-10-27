@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be0e6400a1937654f848c7fab9516cbf, type: 3}
-  m_Name: BasicBuildingSettings
+  m_Script: {fileID: 11500000, guid: d5be8bc09ac5c524cbe780f86c5441e0, type: 3}
+  m_Name: SingleRoof
   m_EditorClassIdentifier: 
-  buildingSize: {x: 5, y: 3}
+  type: 0

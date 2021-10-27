@@ -41,8 +41,6 @@ public class BuildingRenderer : MonoBehaviour
         {
             for (int y = room.Bounds.min.y; y < room.Bounds.max.y; y++)
             {
-                Debug.Log("X: " + x + "   Y: " + y);
-
                 PlaceGround(x, y, floor.Level, floorFolder);
 
                 //South Wall
@@ -101,6 +99,7 @@ public class BuildingRenderer : MonoBehaviour
 
    private void PlaceRoof(float x, float y, int level, Transform roomFolder, RoofType type, RoofDirection direction)
    {
+       //TODO : Some roof components have different offsets, deal with the offset (Flat roof)
         Transform r;
         r = Instantiate(
             roofPrefab[(int)type],

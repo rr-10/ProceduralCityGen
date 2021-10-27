@@ -39,6 +39,14 @@ public static class BuildingGeneration
 
     static Roof GenerateRoof(BuildingSettings settings, RectInt bounds)
     {
-        return new Roof(RoofType.Pyrimid, RoofDirection.North);
+        if (settings.roofRule != null)
+        {
+            return (settings.roofRule.GenerateRoof(settings, bounds));
+        }    
+        else 
+        {
+            //Use the default roof rule
+            return (ScriptableObject.CreateInstance<DefaultRoofRules>().GenerateRoof(settings, bounds));
+        }
     }
 }
