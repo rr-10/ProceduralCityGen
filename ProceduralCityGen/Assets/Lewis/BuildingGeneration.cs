@@ -9,14 +9,14 @@ public static class BuildingGeneration
         return new Building(4, 4, GenerateRooms());
     }
 
-    static Room GenerateRooms()
+    static Room[] GenerateRooms()
     {
         return new Room[] { GenerateSingleRoom() };
     }
 
     static Room GenerateSingleRoom()
     {
-        new Room(
+        return new Room(
             new RectInt(0, 0, 4, 4),
             GenerateFloors(),
             GenerateRoof());
@@ -32,13 +32,13 @@ public static class BuildingGeneration
         return new Floor(0, GenerateWalls());
     }
 
-    static Walls[] GenerateWalls()
+    static Wall[] GenerateWalls()
     {
         return new Wall[16];
     }
 
     static Roof GenerateRoof()
     {
-        return new Roof(RoofType.Pyrimid, RoofDirection.North)
+        return new Roof(RoofType.Pyrimid, RoofDirection.North);
     }
 }
