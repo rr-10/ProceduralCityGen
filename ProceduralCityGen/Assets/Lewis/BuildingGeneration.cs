@@ -39,14 +39,12 @@ public static class BuildingGeneration
 
     static Roof GenerateRoof(BuildingSettings settings, RectInt bounds)
     {
-        if (settings.roofRule != null)
+        //If a rule is set use it, otherwise use the default rule     
+        if (!settings.roofRule)
         {
-            return (settings.roofRule.GenerateRoof(settings, bounds));
-        }    
-        else 
-        {
-            //Use the default roof rule
-            return (ScriptableObject.CreateInstance<DefaultRoofRules>().GenerateRoof(settings, bounds));
+            return settings.roofRule.GenerateRoof(settings, bounds);
         }
+
+        return ScriptableObject.CreateInstance<DefaultRoofRules>().GenerateRoof(settings, bounds);
     }
 }

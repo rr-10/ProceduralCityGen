@@ -15,6 +15,6 @@ public class SinglePointRoof : RoofRules
             return new Roof(towerRoof, RoofDirection.North);
        }
 
-       return new Roof(normalRoof, RoofDirection.North );
+       return new Roof(normalRoof, RoofDirection.East );
    }
 }
