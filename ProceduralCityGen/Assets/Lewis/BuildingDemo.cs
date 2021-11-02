@@ -7,7 +7,7 @@ public class BuildingDemo : MonoBehaviour
     public BuildingSettings settings;
 
     // Start is called before the first frame update
-    void Start()
+    public void StartGeneration()
     {
         Building b1 = BuildingGeneration.GenerateBuilding(settings);
         GetComponent<BuildingRenderer>().Render(b1);
