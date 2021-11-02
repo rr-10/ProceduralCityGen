@@ -9,11 +9,9 @@ public class Map_Gen_Editor : Editor
 
     public override void OnInspectorGUI()
     {
-        //Create references to calsses so can create Buttons for functions
         Map_Generation Map_Gen = (Map_Generation)target;
         Building_Genertor Buildings = FindObjectOfType<Building_Genertor>();
         Vegation veg = FindObjectOfType<Vegation>();
-
         if (DrawDefaultInspector())
             if (Map_Gen.Auto_Update)
                 Map_Gen.Generate_Map();
@@ -22,8 +20,6 @@ public class Map_Gen_Editor : Editor
         {
             Map_Gen.Generate_Map();
         }
-
-
         if (GUILayout.Button("WipeMap"))
         {
             Buildings.clearBuildings();
@@ -31,6 +27,6 @@ public class Map_Gen_Editor : Editor
         }
 
 
-        
+        //test
     }
 }

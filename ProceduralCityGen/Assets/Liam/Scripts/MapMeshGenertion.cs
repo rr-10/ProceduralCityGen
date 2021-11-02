@@ -22,7 +22,7 @@ public static class MapMeshGenertion
             for (int x = 0; x < Width; x++)
             {
 
-                meshD.vertices[Index_Vertex] = new Vector3(topLeftX + x, HeightCurve.Evaluate(HeightMap[x, y]) * Height_MultiPly, topLeftY - y); //uses animation curve to determine height 
+                meshD.vertices[Index_Vertex] = new Vector3(topLeftX + x,HeightCurve.Evaluate(HeightMap[x, y]) * Height_MultiPly, topLeftY - y); //uses animation curve to determine height 
                 meshD.UVData[Index_Vertex] = new Vector2(x / (float)Width, y / (float)height); // get relative position on map
 
 
@@ -78,6 +78,7 @@ public class DataMesh // class to sore mesh data
         Map_Mesh.triangles = Triangles;
         Map_Mesh.uv = UVData;
         Map_Mesh.RecalculateNormals(); // get normals
+
 
         return Map_Mesh;
     }

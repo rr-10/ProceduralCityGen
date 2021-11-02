@@ -37,10 +37,11 @@ public class Map_Generation : MonoBehaviour
     public bool Buildings;
     public bool BuildingsPrefabs;
 
+
     //TODO add vegation option
 
     //value used to check how flat land needs to be to have a building
-    double FlatLand = 0.01;
+    public double FlatLand = 0.0050;
 
 
 
@@ -97,8 +98,6 @@ public class Map_Generation : MonoBehaviour
         }
 
 
-        int lol = 0;
-        bool once = false;
         //Stores where buildings are located on the map
         int[] bulidingMap = new int[Width * Height];
 
@@ -111,8 +110,11 @@ public class Map_Generation : MonoBehaviour
                     //loop through for building sizes
                     float CurrentHeight = Map_Noise[x, y];
 
-                    if (CurrentHeight > Biomes[3].height)
+                    if (CurrentHeight > Biomes[3].height && CurrentHeight < Biomes[6].height) //add max height
                     {
+
+
+
 
                         for (int i = 3; i > 0; i--)
                         {
@@ -128,6 +130,8 @@ public class Map_Generation : MonoBehaviour
                                 {
                                     if (Check > -FlatLand && Check < FlatLand && check2 > -FlatLand && check2 < FlatLand && Check3 > -FlatLand && Check3 < FlatLand)
                                     {
+
+
                                         //Checking centre verticies to see if flat with out verticies
                                         float checkCenterLT = CurrentHeight - Map_Noise[x + i - 2, y + i - 1];
                                         float checkCenterLB = CurrentHeight - Map_Noise[x + i - 2, y + i - 2];
@@ -146,6 +150,7 @@ public class Map_Generation : MonoBehaviour
                                                     Map_Colour[(y + j) * Width + x + 2] = Color.black;
 
                                                 }
+
                                                 //loop trhough all the height points and set them to occupied by a building
                                                 Map_Colour[(y) * Width + x] = Color.grey;
                                                 for (int j = 0; j < 4; j++)
@@ -154,6 +159,11 @@ public class Map_Generation : MonoBehaviour
                                                     bulidingMap[(y + j) * Width + x + 1] = 1;
                                                     bulidingMap[(y + j) * Width + x + 2] = 1;
                                                     bulidingMap[(y + j) * Width + x + 3] = 1;
+
+                                                    Map_Noise[x, y + j] = Map_Noise[x, y];
+                                                    Map_Noise[x + 1, y + j] = Map_Noise[x, y];
+                                                    Map_Noise[x + 2, y + j] = Map_Noise[x, y];
+                                                    Map_Noise[x + 3, y + j] = Map_Noise[x, y];
 
                                                 }
 
@@ -180,7 +190,15 @@ public class Map_Generation : MonoBehaviour
                                         {
                                             Map_Colour[y * Width + x] = Color.yellow;
                                             bulidingMap[y * Width + x] = 2;
+                                            bulidingMap[(y + 1) * Width + x + 1] = 1;
+                                            bulidingMap[(y + 1) * Width + x] = 1;
+                                            bulidingMap[y * Width + x + 1] = 1;
+
+                                            Map_Noise[x + 1, y + 1] = Map_Noise[x, y];
+                                            Map_Noise[x + 1, y] = Map_Noise[x, y];
+                                            Map_Noise[x, y + 1] = Map_Noise[x, y];
                                         }
+
 
                                         //if area for medium building
                                         else
@@ -201,11 +219,9 @@ public class Map_Generation : MonoBehaviour
                                                     bulidingMap[(y + j) * Width + x + 1] = 1;
                                                     bulidingMap[(y + j) * Width + x + 2] = 1;
 
-                                                    if (once == false)
-                                                    {
-                                                        once = true;
-                                                        lol = y * Width + x;
-                                                    }
+                                                    Map_Noise[x, y + j] = Map_Noise[x, y];
+                                                    Map_Noise[x + 1, y + j] = Map_Noise[x, y];
+                                                    Map_Noise[x + 2, y + j] = Map_Noise[x, y];
 
 
                                                 }
@@ -237,8 +253,8 @@ public class Map_Generation : MonoBehaviour
 
 
 
-        
-        //Send data to display script
+
+
 
         //Create references to scripts that generate buildings, map and vegation
         Display_Map Display = FindObjectOfType<Display_Map>();
@@ -255,11 +271,14 @@ public class Map_Generation : MonoBehaviour
         else if (DrawMap == Draw_Mode.ColourMap)
             Display.Drawtextures(Textures.TextureFromMap(Map_Colour, Width, Height));
 
+
         //Mesh with possible buildings and vegation
         else if (DrawMap == Draw_Mode.Mesh)
         {
-            Display.DrawMesh(MapMeshGenertion.GenerateMeshTerrain(Map_Noise, MeshHeight, MeshHeightCurve), Textures.TextureFromMap(Map_Colour, Width, Height), lol);
-            Debug.Log("here");
+            //Display script activates creation of mesh
+            Display.DrawMesh(MapMeshGenertion.GenerateMeshTerrain(Map_Noise, MeshHeight, MeshHeightCurve), Textures.TextureFromMap(Map_Colour, Width, Height));
+
+
             if (BuildingsPrefabs == true)
             {
                 Buildings_gen.clearBuildings();
@@ -268,13 +287,14 @@ public class Map_Generation : MonoBehaviour
                 veg.GenerateVegation(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight, Seed);
 
             }
+
             else
             {
                 Buildings_gen.clearBuildings();
                 veg.ClearVegation();
             }
         }
-        
+
 
     }
 
@@ -297,6 +317,9 @@ public class Map_Generation : MonoBehaviour
 
         if (Perlin_Noise == false && Simplex_noise == false && value_noise == false)
             Perlin_Noise = true;
+
+        if (Octaves > 20)
+            Octaves = 20;
 
     }
 

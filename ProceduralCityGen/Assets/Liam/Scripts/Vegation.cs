@@ -28,8 +28,23 @@ public class Vegation : MonoBehaviour
 
         Index_Vegation = new GameObject[size];
         int size_index = 0;
-        
-        
+
+
+        var Meshh2 = MainMesh.GetComponent<MeshFilter>().sharedMesh;
+
+        Vector3[] verticies = Meshh2.normals;
+        Vector3[] MeshV = Meshh2.vertices;
+       // for (var i = 0; i < verticies.Length; i++)
+     //   {
+       //     Vector3 vertPosition = transform.TransformPoint(MeshV[i]) * 10;
+        //    Vector3 vertNormal = transform.TransformDirection(verticies[i]);
+         //   if (Vector3.Dot(vertNormal, Vector3.up) > 0.98)
+             //   Debug.DrawRay(vertPosition, vertNormal * 10, Color.red, 10, true);
+        //}
+
+
+
+
 
         for (int y = 0; y < height; y++)
         {
@@ -47,9 +62,13 @@ public class Vegation : MonoBehaviour
                 seed++;
                 seed = seed + Ran_Seed.Next(21, 45);
 
+                Vector3 vertPosition = transform.TransformPoint(MeshV[y * width + x]) * 10;
+                Vector3 vertNormal = transform.TransformDirection(verticies[y * width + x]);
+                if (Vector3.Dot(vertNormal, Vector3.up) > 0.98 && BuldingMap[y * width + x] == 0)
+                    BuldingMap[y * width + x] = 10;
 
                 //Spawn an object in sandy area on random
-                if (BuldingMap[y * width + x] == 0 && heightmap[x, y] > 0.3 && heightmap[x, y] < 0.45)
+                if (BuldingMap[y * width + x] == 10 && heightmap[x, y] > 0.3 && heightmap[x, y] < 0.45)
                 {
 
                     float OffSet_X = Ran_Seed.Next(1, 10); //1 in 10 chance 
@@ -68,14 +87,14 @@ public class Vegation : MonoBehaviour
                 }
 
                 //Spawn a tree in grass at random
-                else if (BuldingMap[y * width + x] == 0 && heightmap[x, y] > 0.45 && heightmap[x, y] < 0.60)
+                else if (BuldingMap[y * width + x] == 10 && heightmap[x, y] > 0.45 && heightmap[x, y] < 0.60)
                 {
 
-                    float OffSet_X = Ran_Seed.Next(1, 10);
+                    float OffSet_X = Ran_Seed.Next(1, 1);
                     if (OffSet_X <= 1)
                     {
-                        RelativePosition.x += x * MainMesh.transform.localScale.x   + MainMesh.transform.localScale.x / 2;
-                        RelativePosition.z -= y * MainMesh.transform.localScale.z  + MainMesh.transform.localScale.z / 2;
+                        RelativePosition.x += x * MainMesh.transform.localScale.x   ;
+                        RelativePosition.z -= y * MainMesh.transform.localScale.z  ;
                         RelativePosition.y = HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * MainMesh.transform.localScale.y + (Grass.transform.localScale.y / 1.8f);
 
 

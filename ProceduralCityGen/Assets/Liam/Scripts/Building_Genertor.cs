@@ -14,7 +14,8 @@ public class Building_Genertor : MonoBehaviour
     //dont delete
     GameObject[] Index_Buldings;
 
-    public void GenerateBuildings(int width, int height, float[,] heightmap, int[] BuldingMap, AnimationCurve HeightCurve, float mesh_Height) //add references  for your prefabs here or watever if you want or just include them
+    public void GenerateBuildings(int width, int height, float[,] heightmap, int[] BuldingMap, AnimationCurve HeightCurve, float mesh_Height
+        ) //add references  for your prefabs here or watever if you want or just include them
     {
 
       
@@ -45,36 +46,47 @@ public class Building_Genertor : MonoBehaviour
                 if (BuldingMap[y * width + x] == 2)
                 {
                     
-                    RelativePosition.x += x * Meshh.transform.localScale.x + Meshh.transform.localScale.x / 2; //Get location on Map
-                    RelativePosition.z -= y * Meshh.transform.localScale.z + Meshh.transform.localScale.z / 2; //Z is used for Y axis in the 3d world
-                    RelativePosition.y = HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y + (cube.transform.localScale.y /2.2f); // Calulate height
+
+
+
+                        RelativePosition.x += x * Meshh.transform.localScale.x + Meshh.transform.localScale.x / 2; //Get location on Map
+                        RelativePosition.z -= y * Meshh.transform.localScale.z + Meshh.transform.localScale.z / 2; //Z is used for Y axis in the 3d world
+                        RelativePosition.y = HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y + (cube.transform.localScale.y / 2.2f); // Calulate height
+
+                        //Make sure to increase index
+                        Index_Buldings[size_index] = Instantiate(cube, RelativePosition, transform.rotation); //Create object
+                        size_index++;
                     
-                    //Make sure to increase index
-                    Index_Buldings[size_index] = Instantiate(cube, RelativePosition, transform.rotation); //Create object
-                    size_index++;
                 }
 
                 //medium building
                 else if (BuldingMap[y * width + x] == 3)
                 {
-                    RelativePosition.x += x * Meshh.transform.localScale.x + Meshh.transform.localScale.x ;
-                    RelativePosition.z -= y * Meshh.transform.localScale.z + Meshh.transform.localScale.z ;
-                    RelativePosition.y = HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y + (cube.transform.localScale.y / 1.8f);
 
                     
-                    Index_Buldings[size_index] = Instantiate(medium, RelativePosition, transform.rotation);
-                    size_index++;
+                        RelativePosition.x += x * Meshh.transform.localScale.x + Meshh.transform.localScale.x;
+                        RelativePosition.z -= y * Meshh.transform.localScale.z + Meshh.transform.localScale.z;
+                        RelativePosition.y = HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y + (cube.transform.localScale.y / 1.8f);
+
+
+                        Index_Buldings[size_index] = Instantiate(medium, RelativePosition, transform.rotation);
+                        size_index++;
+                    
                 }
 
                 //large building
                 else if (BuldingMap[y * width + x] == 4)
                 {
-                    RelativePosition.x += x * Meshh.transform.localScale.x + Meshh.transform.localScale.x + Meshh.transform.localScale.x / 2;
-                    RelativePosition.z -= y * Meshh.transform.localScale.z + Meshh.transform.localScale.z + Meshh.transform.localScale.z / 2;
-                    RelativePosition.y = HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y + (cube.transform.localScale.y / 1.5f);
                     
-                    Index_Buldings[size_index] = Instantiate(large, RelativePosition, transform.rotation);
-                    size_index++;
+
+                    
+                        RelativePosition.x += x * Meshh.transform.localScale.x + Meshh.transform.localScale.x + Meshh.transform.localScale.x / 2;
+                        RelativePosition.z -= y * Meshh.transform.localScale.z + Meshh.transform.localScale.z + Meshh.transform.localScale.z / 2;
+                        RelativePosition.y = HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y + (cube.transform.localScale.y / 1.5f);
+
+                        Index_Buldings[size_index] = Instantiate(large, RelativePosition, transform.rotation);
+                        size_index++;
+                    
                 }
                 
             }

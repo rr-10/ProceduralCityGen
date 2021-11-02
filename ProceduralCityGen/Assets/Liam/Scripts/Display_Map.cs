@@ -8,8 +8,7 @@ public class Display_Map : MonoBehaviour
     public Renderer tex_Renderer;
     public MeshFilter Filter;
     public MeshRenderer Renderer;
-    public GameObject cube;
-    public GameObject Meshh;
+    public MeshCollider COllider;
     //draw 2D nosie map
     public void Drawtextures(Texture2D texture)
     {
@@ -19,13 +18,20 @@ public class Display_Map : MonoBehaviour
         tex_Renderer.transform.localScale = new Vector3(texture.width, 1, texture.height);
     }
 
-    public void DrawMesh (DataMesh MeshD, Texture2D texture, int lol)
+    public void DrawMesh (DataMesh MeshD, Texture2D texture)
     {
         
         Filter.sharedMesh = MeshD.CreateNewMesh(); //shared material so we can render outside of game
         Renderer.sharedMaterial.mainTexture = texture;
+        COllider.sharedMesh = MeshD.CreateNewMesh();
+
+
+
+
+
+
 
     }
-
+    
 
 }
