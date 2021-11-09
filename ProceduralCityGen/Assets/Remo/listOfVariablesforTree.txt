@@ -1,0 +1,76 @@
+'''
+# Variables for Tree Generation - These are values that are required for making a tree. 
+Find a way to allow the user (in unity) to input values which would be pushed to the editor
+
+# Can be a pain to pull certain values if you don't know how it works
+
+# Valeus for Geometry and Branch Radius
+seedNumber = get_int("seed")
+
+
+int branchRatio (1st)
+int branchRadiusScale
+int branchRadiusRatio
+int rootFlareVal
+
+# Values to push for Branch Splitting
+int branchSplitLevels
+int branchBaseSplits
+int trunkHeight
+int trunkSplitHeight
+
+int noOfBranchesLv1
+int noOfBranchesLv2
+int noOfBranchesLv3
+int noOfBranchesLv4
+
+float branchesSegSplitLv1
+float branchesSegSplitLv2
+float branchesSegSplitLv3
+float branchesSegSplitLv4
+
+float splitAngleLv1
+float splitAngleLv2
+float splitAngleLv3
+float splitAngleLv4
+
+float rotateAngleLv1
+float rotateAngleLv2
+float rotateAngleLv3
+float rotateAngleLv4
+
+# Values for branch growth
+
+float branchLengthLv1
+float branchLengthLv2
+float branchLengthVLv1
+float branchLengthVLv2
+
+float downAngleLv1
+float downAngleLv2
+float downAngleVLv1
+float downAngleVLv2
+
+float curvatureLv1
+float curvatureLv2
+float curvatureVLv1
+float curvatureVLv2
+
+# Values for leaves
+
+bool isShowingLeaves
+int noOfLeaves
+float angleDownLeaves
+float angleDownLeavesV
+float rotOfLeaves
+float rotOfLeavesV
+
+float leafScale
+float leafScaleX
+float leafScaleT
+float leafScaleV
+
+bool horizontalLeaves
+float angleOfLeaves
+
+'''
