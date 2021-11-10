@@ -226,7 +226,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1454701888}
   - component: {fileID: 1454701887}
-  - component: {fileID: 1454701886}
   m_Layer: 0
   m_Name: BuildingGen
   m_TagString: Untagged
@@ -234,18 +233,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1454701886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1454701885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e039b7572e9b249428e608ac25893fde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1454701887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,9 +242,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1454701885}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bcb4e1d5a7f6574e872b880cd97e2e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 257c5b32984367f4da9bf0cfd473a5b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NormalWallPrefab: {fileID: 0}
+  DoorWallPrefab: {fileID: 0}
+  WindowWallPrefab: {fileID: 0}
+  BalconyWallPrefab: {fileID: 0}
+  FloorPrefab: {fileID: 0}
+  RoofPrefab: {fileID: 0}
+  Bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  MaximumFloors: 1
 --- !u!4 &1454701888
 Transform:
   m_ObjectHideFlags: 0

@@ -2,25 +2,59 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Room 
+public class Room
 {
-    RectInt bounds;
-    Floor[] floors;
-    Roof roof;
+    public List<Wall> Walls { get; private set; }
 
-    public RectInt Bounds { get => bounds; }
-    public Floor[] Floors { get => floors; }
-    public Roof GetRoof { get => roof; }
+    public bool IsInterior { get; private set; } = false;
+    public bool HasRoof { get;  set; }
+    public Vector2 Position { get;  set; }
 
-    public Room(RectInt bounds)
+    public Room(Vector2 position)
     {
-        this.bounds = bounds;
+        this.Position = position;
     }
 
-    public Room(RectInt bounds, Floor[] floors, Roof roof)
+    public void SetIsInterior(bool flag)
     {
-        this.bounds = bounds;
-        this.floors = floors;
-        this.roof = roof;
+        this.IsInterior = flag;
+    }
+
+    public void CreateWalls(int floorLevel, WallSide side)
+    {
+        //Create list of walls if needed 
+        if (Walls == null) Walls = new List<Wall>();
+
+        //Randomly pick a wall type based on the floor
+        if (floorLevel == 0)
+        {
+            if (UnityEngine.Random.Range(0.0f, 1.0f) <= GenerateBuilding.WindowPercentChance)
+            {
+                Walls.Add(new Wall(WallType.Window, side) );
+            }
+            else if (UnityEngine.Random.Range(0.0f, 1.0f) <= GenerateBuilding.DoorPercentChance)
+            {
+                Walls.Add(new Wall(WallType.Door, side));
+            }
+            else
+            {
+                Walls.Add(new Wall(WallType.Normal, side));
+            }
+        }
+        else
+        {
+            if (UnityEngine.Random.Range(0.0f, 1.0f) <= GenerateBuilding.BalconyPercentChance)
+            {
+                Walls.Add(new Wall(WallType.Balcony, side) );
+            }
+            else if (UnityEngine.Random.Range(0.0f, 1.0f) <= GenerateBuilding.WindowPercentChance)
+            {
+                Walls.Add(new Wall(WallType.Window, side));
+            }
+            else
+            {
+                Walls.Add(new Wall(WallType.Normal, side));
+            }
+        }
     }
 }

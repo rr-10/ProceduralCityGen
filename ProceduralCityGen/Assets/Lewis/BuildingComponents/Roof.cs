@@ -2,31 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Roof : MonoBehaviour
+
+public enum RoofType 
 {
-    RoofType type;
-    RoofDirection direction;
-
-    public RoofType Type { get => type; }
-    public RoofDirection Direction { get => direction; }
-
-    public Roof(RoofType type, RoofDirection direction)
-    {
-        this.type = type;
-        this.direction = direction;
-    }
-}
-
-public enum RoofType { 
-    Pyrimid,
     Flat,
+    Pyrimid,
     FrontGabel
 }
 
-public enum RoofDirection { 
-    North,
-    East,
-    South,
-    West
-}
 
+public class Roof 
+{
+    public RoofType type { get; private set; }
+
+    public Roof(RoofType roofType = RoofType.Flat)
+    {
+        this.type = roofType;
+    }
+}

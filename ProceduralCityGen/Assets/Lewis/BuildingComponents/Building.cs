@@ -1,18 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Schema;
 using UnityEngine;
 
 public class Building
 {
-    Vector2Int size;
-    Room[] rooms;
+    public List<Floor> Floors { get; private set; }
 
-    public Vector2Int Size { get => size; }
-    public Room[] Rooms { get => rooms; }
+    public int NumberOfFloors { get; private set; } = 0;
 
-    public Building(int x, int y, Room[] rooms)
+    public Transform Offset;
+    public Quaternion Rotation;
+
+    private int sizeX = 0;
+    private int sizeY = 0;
+
+    public Building(int x, int y , Transform offset, Quaternion rotation)
     {
-        this.size = new Vector2Int(x, y);
-        this.rooms = rooms;
-    }    
+        Floors = new List<Floor>();
+        this.Offset = offset;
+        this.Rotation = rotation;
+        this.sizeX = x;
+        this.sizeY = y;
+    }
+
+    public bool AddFloor(Process process)
+    {
+        Floor floor = new Floor(NumberOfFloors);
+        if (NumberOfFloors == 0)
+        {
+            floor.CreateFirstFloor(sizeX, sizeY); 
+        }
+        else
+        {
+            floor.CreateFromPreviousFloor(Floors.Last(), process);
+        }
+        
+        //Create the walls for that floor, this function will also place doors, windows and balconies
+        floor.GenerateWalls();
+        
+        Floors.Add(floor);
+        NumberOfFloors++;
+
+        //Check if the last floor created was all roofed 
+        return Floors.Last().CheckForComplete();
+    }
 }
