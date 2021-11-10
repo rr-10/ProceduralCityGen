@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-//TODO : We can still have scriptable object rules, these can be created at a later time however 
-
 public enum Process
 {
     NoChange,
@@ -27,15 +25,25 @@ public class GenerateBuilding : MonoBehaviour
     [SerializeField] private Bounds Bounds; //TODO - Will be determined from the terrain data
     
     //TODO - Add the custom editor field for these
-    [SerializeField] private int MaximumFloors = 1; 
-    [SerializeField] public static float DoorPercentChance = 0.2f;
-    [SerializeField] public static float WindowPercentChance = 0.4f;
-    [SerializeField] public static float BalconyPercentChance = 0.35f;
+    [SerializeField] private int MaximumFloors = 1;
+    [SerializeField] private float setDoorChance;
+    public static float DoorPercentChance = 0.2f;
+    [SerializeField] private float setWindowChance;
+    public static float WindowPercentChance = 0.4f;
+    [SerializeField] private float setBalconyChance;
+    public static float BalconyPercentChance = 0.35f;
 
     //Internal Variables 
     private Building building;
     private List<GameObject> spawnedPrefabs = new List<GameObject>();
     private Process ProcessToApply;
+
+    public void Awake()
+    {
+        DoorPercentChance = setDoorChance;
+        WindowPercentChance = setWindowChance;
+        BalconyPercentChance = setBalconyChance;
+    }
 
     public void Generate()
     {
@@ -138,7 +146,7 @@ public class GenerateBuilding : MonoBehaviour
 
     private void PlaceWall(Wall wall, Transform parentTransform, Vector3 position)
     {
-        //Spawn all the walls of the room and the roof if needed 
+        //Spawn all the walls of the room
         switch (wall.Type)
         {
             case WallType.Normal:

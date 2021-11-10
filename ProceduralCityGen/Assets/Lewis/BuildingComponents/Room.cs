@@ -5,6 +5,7 @@ using UnityEngine;
 public class Room
 {
     public List<Wall> Walls { get; private set; }
+    public Roof RoomRoof { get; private set; }
 
     public bool IsInterior { get; private set; } = false;
     public bool HasRoof { get;  set; }

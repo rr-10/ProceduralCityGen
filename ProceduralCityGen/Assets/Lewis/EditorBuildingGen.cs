@@ -8,7 +8,7 @@ using UnityEditor;
 public class EditorBuildingGen : Editor
 {
     private SerializedObject m_object;
-    
+        
     //Prefabs
     private SerializedProperty m_normalWallPrefab;
     private SerializedProperty m_windowWallPrefab;
@@ -16,15 +16,16 @@ public class EditorBuildingGen : Editor
     private SerializedProperty m_balconyWallPrefab;
     private SerializedProperty m_floorPrefab;
     private SerializedProperty m_roofPrefab;
-    
-    
-    //TODO - Random Chances and max roof should be in here 
-    
-    
-    
-    private SerializedProperty m_bounds;
+
+    //Random Chances and max roof
+    private SerializedProperty m_doorPercentChance;
+    private SerializedProperty m_windowPercentChance;
+    private SerializedProperty m_balconyPercentChance;
+    private SerializedProperty m_maximumFloors;
 
     protected static bool showPrefabs = true;
+    protected static bool showWallPrefabs = true;
+
     public void OnEnable()
     {
         m_object = new SerializedObject(target);
@@ -34,27 +35,39 @@ public class EditorBuildingGen : Editor
         m_balconyWallPrefab = m_object.FindProperty("BalconyWallPrefab");
         m_floorPrefab = m_object.FindProperty("FloorPrefab");
         m_roofPrefab = m_object.FindProperty("RoofPrefab");
-        m_bounds = m_object.FindProperty("Bounds");
+
+        m_doorPercentChance = m_object.FindProperty("setDoorChance");
+        m_windowPercentChance = m_object.FindProperty("setWindowChance");
+        m_balconyPercentChance = m_object.FindProperty("setBalconyChance");
+        m_maximumFloors = m_object.FindProperty("MaximumFloors");
     }
 
     public override void OnInspectorGUI()
     {
-        //DrawDefaultInspector();
-        //EditorGUILayout.PropertyField(m_bounds);
+        EditorGUILayout.Slider(m_doorPercentChance, 0.0f, 1.0f);
+        EditorGUILayout.Slider(m_windowPercentChance, 0.0f, 1.0f);
+        EditorGUILayout.Slider(m_balconyPercentChance, 0.0f, 1.0f);
+
+        EditorGUILayout.PropertyField(m_maximumFloors);
      
         //Building Prefabs
         showPrefabs = EditorGUILayout.Foldout(showPrefabs, "Building Prefabs");
+      
         if (showPrefabs)
         {
-            EditorGUILayout.PropertyField(m_normalWallPrefab);
-            EditorGUILayout.PropertyField(m_windowWallPrefab);
-            EditorGUILayout.PropertyField(m_doorWallPrefab);
-            EditorGUILayout.PropertyField(m_balconyWallPrefab);
+            showWallPrefabs = EditorGUILayout.Foldout(showWallPrefabs, "Wall Prefabs");
+            if (showWallPrefabs)
+            {
+                EditorGUILayout.PropertyField(m_normalWallPrefab);
+                EditorGUILayout.PropertyField(m_windowWallPrefab);
+                EditorGUILayout.PropertyField(m_doorWallPrefab);
+                EditorGUILayout.PropertyField(m_balconyWallPrefab);
+            }
+
+            EditorGUILayout.PropertyField(m_roofPrefab);
 
             EditorGUILayout.PropertyField(m_floorPrefab);
-            EditorGUILayout.PropertyField(m_roofPrefab);
-        }
-        
+        }        
         
         //Generate Building on button press or settings change
         GenerateBuilding generationScript = (GenerateBuilding)target;
