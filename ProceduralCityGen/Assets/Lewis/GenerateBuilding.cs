@@ -138,6 +138,11 @@ public class GenerateBuilding : MonoBehaviour
                         {
                             PlaceWall(wall, floorFolder.transform, new Vector3(room.Position.x, room.Position.y, floor.FloorLevel));
                         }
+
+                        if (room.HasRoof)
+                        {
+
+                        }
                     }
                 }
             }

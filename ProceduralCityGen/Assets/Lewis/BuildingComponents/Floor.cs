@@ -44,6 +44,7 @@ public class Floor
         }
     }
 
+    //TODO : Select a roof to use 
     private void ApplyRoofToAll()
     {
         for (int x = 0; x < Rooms.GetLength(0); x++)
@@ -58,6 +59,7 @@ public class Floor
             }
         }
     }
+
     public bool CheckForComplete()
     {
         return (RoomsWithNoRoof > 0);
