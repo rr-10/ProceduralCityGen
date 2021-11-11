@@ -11,10 +11,10 @@ public enum WallType
 }
 public enum WallSide : ushort
 {
-    North = 0,
-    East = 90,
-    South = 180,
-    West = 270
+    North = 270,
+    East = 0,
+    South = 90,
+    West = 180
 }
 public class Wall
 {

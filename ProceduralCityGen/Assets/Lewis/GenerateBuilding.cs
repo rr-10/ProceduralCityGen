@@ -23,7 +23,7 @@ public class GenerateBuilding : MonoBehaviour
     [SerializeField] private GameObject FloorPrefab;
     [SerializeField] private GameObject RoofPrefab;
     [SerializeField] private Bounds Bounds; //TODO - Will be determined from the terrain data
-    
+
     //TODO - Add the custom editor field for these
     [SerializeField] private int MaximumFloors = 1;
     [SerializeField] private float setDoorChance;
@@ -38,15 +38,12 @@ public class GenerateBuilding : MonoBehaviour
     private List<GameObject> spawnedPrefabs = new List<GameObject>();
     private Process ProcessToApply;
 
-    public void Awake()
+    public void Generate()
     {
         DoorPercentChance = setDoorChance;
         WindowPercentChance = setWindowChance;
         BalconyPercentChance = setBalconyChance;
-    }
 
-    public void Generate()
-    {
         //Clear any prefab that was previously created 
         Clear();
 
@@ -60,9 +57,9 @@ public class GenerateBuilding : MonoBehaviour
     //This function is where the building generation is done
     private void CreateBuilding()
     {
-        ProcessToApply = Process.NoChange;
+        ProcessToApply = Process.ShrinkColumn;
         //Determine initial symbol 
-        building = new Building(3, 3, transform, Quaternion.identity); //TODO : Initial Values should be determined 
+        building = new Building(4, 4, transform, Quaternion.identity); //TODO : Initial Values should be determined 
 
         while (building.AddFloor(ProcessToApply))
         {
@@ -72,23 +69,23 @@ public class GenerateBuilding : MonoBehaviour
                 ProcessToApply = Process.ApplyRoof;
                 continue;
             }
-            
+
             //TODO : The grammar rules could be moved to a scriptable object allowing for easy changes to variation
             //TODO : Work on adding some more variation to the grammar rules 
             //Apply grammar rules
             switch (ProcessToApply)
             {
                 case Process.NoChange:
-                    ProcessToApply = Process.ApplyRoof;
+                    ProcessToApply = Process.ShrinkColumn;
                     break;
                 case Process.ShrinkColumn:
-                    ProcessToApply = Process.ShrinkRow;
-                    break;
-                case Process.ShrinkRow:
                     ProcessToApply = Process.NoChange;
                     break;
+                case Process.ShrinkRow:
+                    ProcessToApply = Process.ApplyRoof;
+                    break;
                 case Process.ShrinkRandom:
-                    ProcessToApply = Process.ShrinkRandom;
+                    ProcessToApply = Process.ApplyRoof;
                     break;
                 case Process.ApplyRoof:
                     break;
@@ -102,19 +99,18 @@ public class GenerateBuilding : MonoBehaviour
         //Destroy every gameobject we spawned 
         foreach (GameObject o in spawnedPrefabs)
         {
-            Destroy(o);
+            DestroyImmediate(o);
         }
+
         spawnedPrefabs.Clear(); // All gameobject in the list should now be destroyed so safe to clear
     }
 
-    
+
     //TODO - Should also place a ground plane for each floor
 
     //Place all the prefabs in the scene to represent the generated building
     private void Render()
     {
-        Debug.Log("Rendering Building...");
-        
         //Create folder for building
         GameObject buildingFolder = new GameObject($"Building");
         spawnedPrefabs.Add(buildingFolder);
@@ -131,40 +127,104 @@ public class GenerateBuilding : MonoBehaviour
                 {
                     Room room = floor.Rooms[x, y]; //Get the room 
 
-                    //Draw the room only if it has walls that need drawing
-                    if (room.IsInterior & room.Walls != null)
-                    {
-                        foreach (Wall wall in room.Walls)
-                        {
-                            PlaceWall(wall, floorFolder.transform, new Vector3(room.Position.x, room.Position.y, floor.FloorLevel));
-                        }
+                    //3d position of room relative to 
+                    Vector3 roomPosition = new Vector3(room.Position.x, floor.FloorLevel, room.Position.y);
 
+                    
+                    
+                    
+                    //Draw the room only if it has walls that need drawing
+                    if (room.IsInterior)
+                    {
+                        
+                        PlaceFloor(floorFolder.transform, roomPosition);
+                        if (room.Walls != null)
+                        {
+                            foreach (Wall wall in room.Walls)
+                            {
+                                PlaceWall(wall, floorFolder.transform,roomPosition);
+                            }
+                        }
+                        
                         if (room.HasRoof)
                         {
-
+                            PlaceRoof(room.RoomRoof, floorFolder.transform, roomPosition);
                         }
                     }
+                    
                 }
             }
         }
     }
 
+    private void PlaceFloor(Transform parentTransform, Vector3 position)
+    {
+        Vector3 setPosition = new Vector3();
+        setPosition.x = position.x * 2;
+        setPosition.y = (position.y * 3);
+        setPosition.z = position.z * 2;
+        
+        
+        SpawnPrefab(FloorPrefab, parentTransform, setPosition, Quaternion.identity);
+    }
+    
+
+    private void PlaceRoof(Roof roof, Transform parentTransform, Vector3 position)
+    {
+        Vector3 setPosition = new Vector3();
+        setPosition.x = position.x * 2;
+        setPosition.y = (position.y * 3) + 3;
+        setPosition.z = position.z * 2;
+        
+        
+        SpawnPrefab(RoofPrefab, parentTransform, setPosition, Quaternion.identity);
+    }
+
+
     private void PlaceWall(Wall wall, Transform parentTransform, Vector3 position)
     {
+        Vector3 setPostion = new Vector3();
+        setPostion.y = position.y * 3;
+        
+        switch (wall.Side)
+        {
+            case WallSide.North:
+                setPostion.x = position.x * 2;
+                setPostion.z = position.z * 2;
+                
+                break;
+            case WallSide.East:
+                setPostion.x = position.x * 2;
+                setPostion.z = (position.z * 2) + 2;
+                break;
+            case WallSide.South:
+                setPostion.x = (position.x * 2) + 2;
+                setPostion.z = (position.z * 2) + 2;
+                break;
+            case WallSide.West:
+                setPostion.x = (position.x * 2) + 2;
+                setPostion.z = (position.z * 2);
+                break;
+        }
+
         //Spawn all the walls of the room
         switch (wall.Type)
         {
             case WallType.Normal:
-                SpawnPrefab(NormalWallPrefab, parentTransform, position, Quaternion.Euler(0.0f, (float)wall.Side, 0.0f) );
+                SpawnPrefab(NormalWallPrefab, parentTransform, setPostion,
+                    Quaternion.Euler(0.0f, (float) wall.Side, 0.0f));
                 break;
             case WallType.Door:
-                SpawnPrefab(DoorWallPrefab, parentTransform, position, Quaternion.Euler(0.0f, (float)wall.Side, 0.0f) );
+                SpawnPrefab(DoorWallPrefab, parentTransform, setPostion, Quaternion.Euler(0.0f, (float) wall.Side, 0.0f)
+                );
                 break;
             case WallType.Window:
-                SpawnPrefab(WindowWallPrefab, parentTransform, position, Quaternion.Euler(0.0f, (float)wall.Side, 0.0f) );
+                SpawnPrefab(WindowWallPrefab, parentTransform, setPostion,
+                    Quaternion.Euler(0.0f, (float) wall.Side, 0.0f));
                 break;
             case WallType.Balcony:
-                SpawnPrefab(BalconyWallPrefab, parentTransform, position, Quaternion.Euler(0.0f, (float)wall.Side, 0.0f) );
+                SpawnPrefab(BalconyWallPrefab, parentTransform, setPostion,
+                    Quaternion.Euler(0.0f, (float) wall.Side, 0.0f));
                 break;
         }
     }

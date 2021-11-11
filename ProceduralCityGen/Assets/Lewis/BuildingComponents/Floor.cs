@@ -18,12 +18,13 @@ public class Floor
     {
         Rooms = new Room[x, y];
         RoomsWithNoRoof = x * y;
-        
+
         //Set all the rooms to be interior and set position
         for (int i = 0; i < Rooms.GetLength(0); i++)
         {
             for (int j = 0; j < Rooms.GetLength(1); j++)
             {
+                Rooms[i, j] = new Room(new Vector2(i, j));
                 Rooms[i, j].SetIsInterior(true);
                 Rooms[i, j].Position = new Vector2(i, j);
             }
@@ -41,6 +42,28 @@ public class Floor
             case Process.ApplyRoof:
                 ApplyRoofToAll();
                 break;
+            case Process.ShrinkColumn:
+                ShrinkColumn(previous);
+                break;
+        }
+    }
+
+
+    private void ShrinkColumn(Floor previous)
+    {
+        for (int x = 0; x < Rooms.GetLength(0); x++)
+        {
+            for (int y = 0; y < Rooms.GetLength(1); y++)
+            {
+                if (!Rooms[x, y].HasRoof && Rooms[x, y].IsInterior && (x == 0 | y == 0) )
+                {
+                    Rooms[x,y].SetIsInterior(false);
+                    Rooms[x, y].HasRoof = true;
+                    RoomsWithNoRoof--;
+                    previous.Rooms[x, y].HasRoof = true;
+                    previous.Rooms[x, y].RoomRoof = new Roof();
+                }
+            }
         }
     }
 
@@ -55,6 +78,7 @@ public class Floor
                 {
                     Rooms[x, y].HasRoof = true;
                     RoomsWithNoRoof--;
+                    Rooms[x, y].RoomRoof = new Roof();
                 }
             }
         }
@@ -66,73 +90,75 @@ public class Floor
     }
 
     public void GenerateWalls()
-    { 
+    {
         //Determine which rooms have exterior walls and where those walls are, creating those walls when found
-        
-        for (int x = 0; x < Rooms.GetLength(0); x++)
+        for (int x = 0; x < Rooms.GetLength(0) ; x++)
         {
-            for (int y = 0; y < Rooms.GetLength(1); y++)
+            for (int y = 0; y < Rooms.GetLength(1) ; y++)
             {
                 if (Rooms[x, y].IsInterior)
                 {
                     //North Wall
                     if (x == 0)
                     {
-                        Rooms[x,y].CreateWalls(FloorLevel, WallSide.North);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.North);
                     }
                     else if (!Rooms[x - 1, y].IsInterior)
                     {
-                        Rooms[x,y].CreateWalls(FloorLevel, WallSide.North);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.North);
                     }
-                    
+
                     //East Wall
-                    if (y == Rooms.GetLength(1))
+                    if (y == Rooms.GetLength(1) - 1)
                     {
-                        Rooms[x,y].CreateWalls(FloorLevel, WallSide.East);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.East);
                     }
                     else if (!Rooms[x, y + 1].IsInterior)
                     {
-                        Rooms[x,y].CreateWalls(FloorLevel, WallSide.East);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.East);
                     }
-                    
+
                     //West Wall
                     if (y == 0)
                     {
-                        Rooms[x,y].CreateWalls(FloorLevel, WallSide.West);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.West);
                     }
-                    else if (!Rooms[x, y + 1].IsInterior)
+                    else if (!Rooms[x, y - 1].IsInterior)
                     {
-                        Rooms[x,y].CreateWalls(FloorLevel, WallSide.West);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.West);
                     }
-                    
+
                     //South Wall
-                    if (x == Rooms.GetLength(0))
+                    if (x == Rooms.GetLength(0) - 1)
                     {
-                        Rooms[x,y].CreateWalls(FloorLevel, WallSide.South);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.South);
                     }
                     else if (!Rooms[x + 1, y].IsInterior)
                     {
-                        Rooms[x,y].CreateWalls(FloorLevel, WallSide.South);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.South);
                     }
                 }
             }
         }
     }
 
-
-    
     private Room[,] RemoveRoomsWithRoof(Room[,] floor)
     {
         Room[,] newFloorRooms = new Room[floor.GetLength(0), floor.GetLength(1)];
-
+        
         for (int x = 0; x < floor.GetLength(0); x++)
         {
             for (int y = 0; y < floor.GetLength(1); y++)
             {
+                newFloorRooms[x, y] = new Room(new Vector2(x, y));
                 if (!floor[x, y].HasRoof && floor[x, y].IsInterior)
                 {
-                    newFloorRooms[x, y] = new Room(new Vector2(x, y));
                     RoomsWithNoRoof++;
+                    newFloorRooms[x, y].SetIsInterior(true);
+                }
+                else
+                {
+                    newFloorRooms[x, y].SetIsInterior(false);
                 }
             }
         }

@@ -5,15 +5,16 @@ using UnityEngine;
 public class Room
 {
     public List<Wall> Walls { get; private set; }
-    public Roof RoomRoof { get; private set; }
+    public Roof RoomRoof { get;  set; }
 
-    public bool IsInterior { get; private set; } = false;
+    public bool IsInterior { get; private set; }
     public bool HasRoof { get;  set; }
     public Vector2 Position { get;  set; }
 
     public Room(Vector2 position)
     {
         this.Position = position;
+        this.HasRoof = false;
     }
 
     public void SetIsInterior(bool flag)
