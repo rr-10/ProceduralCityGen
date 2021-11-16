@@ -15,6 +15,7 @@ public enum Process
 public class GenerateBuilding : MonoBehaviour
 {
     //User Controller Variables 
+    //Prefabs
     [SerializeField] private GameObject NormalWallPrefab;
     [SerializeField] private GameObject DoorWallPrefab;
     [SerializeField] private GameObject WindowWallPrefab;
@@ -22,9 +23,8 @@ public class GenerateBuilding : MonoBehaviour
 
     [SerializeField] private GameObject FloorPrefab;
     [SerializeField] private GameObject RoofPrefab;
-    [SerializeField] private Bounds Bounds; //TODO - Will be determined from the terrain data
 
-    //TODO - Add the custom editor field for these
+    //Settings that alter generation
     [SerializeField] private int MaximumFloors = 1;
     [SerializeField] private float setDoorChance;
     public static float DoorPercentChance = 0.2f;
@@ -44,7 +44,7 @@ public class GenerateBuilding : MonoBehaviour
         WindowPercentChance = setWindowChance;
         BalconyPercentChance = setBalconyChance;
 
-        //Clear any prefab that was previously created 
+        //Clear all prefabs that were previously created 
         Clear();
 
         //Generate the buildings structure
@@ -52,14 +52,15 @@ public class GenerateBuilding : MonoBehaviour
 
         //Once the building is generated, create it in the scene 
         Render();
-    }
+    }                                                     
 
-    //This function is where the building generation is done
-    private void CreateBuilding()
+    //The Create building function will create 
+    //TODO : Move the size variables to the generate function so that everything can be called at once
+    private void CreateBuilding(int baseX = 2, int baseY = 2) 
     {
         ProcessToApply = Process.ShrinkColumn;
         //Determine initial symbol 
-        building = new Building(4, 4, transform, Quaternion.identity); //TODO : Initial Values should be determined 
+        building = new Building(baseX, baseY, transform, Quaternion.identity); 
 
         while (building.AddFloor(ProcessToApply))
         {
@@ -104,10 +105,7 @@ public class GenerateBuilding : MonoBehaviour
 
         spawnedPrefabs.Clear(); // All gameobject in the list should now be destroyed so safe to clear
     }
-
-
-    //TODO - Should also place a ground plane for each floor
-
+    
     //Place all the prefabs in the scene to represent the generated building
     private void Render()
     {
@@ -129,29 +127,28 @@ public class GenerateBuilding : MonoBehaviour
 
                     //3d position of room relative to 
                     Vector3 roomPosition = new Vector3(room.Position.x, floor.FloorLevel, room.Position.y);
-
-                    
-                    
                     
                     //Draw the room only if it has walls that need drawing
                     if (room.IsInterior)
                     {
-                        
+                        //Floor
                         PlaceFloor(floorFolder.transform, roomPosition);
+
+                        //Walls
                         if (room.Walls != null)
                         {
                             foreach (Wall wall in room.Walls)
                             {
-                                PlaceWall(wall, floorFolder.transform,roomPosition);
+                                PlaceWall(wall, floorFolder.transform, roomPosition);
                             }
                         }
-                        
+
+                        //Roof
                         if (room.HasRoof)
                         {
                             PlaceRoof(room.RoomRoof, floorFolder.transform, roomPosition);
                         }
                     }
-                    
                 }
             }
         }
@@ -163,8 +160,7 @@ public class GenerateBuilding : MonoBehaviour
         setPosition.x = position.x * 2;
         setPosition.y = (position.y * 3);
         setPosition.z = position.z * 2;
-        
-        
+
         SpawnPrefab(FloorPrefab, parentTransform, setPosition, Quaternion.identity);
     }
     
@@ -175,35 +171,34 @@ public class GenerateBuilding : MonoBehaviour
         setPosition.x = position.x * 2;
         setPosition.y = (position.y * 3) + 3;
         setPosition.z = position.z * 2;
-        
-        
+
         SpawnPrefab(RoofPrefab, parentTransform, setPosition, Quaternion.identity);
     }
 
 
     private void PlaceWall(Wall wall, Transform parentTransform, Vector3 position)
     {
-        Vector3 setPostion = new Vector3();
-        setPostion.y = position.y * 3;
+        Vector3 offset = new Vector3();
+        offset.y = position.y * 3;
         
+        //Set the position offset for each wall based on its direction
         switch (wall.Side)
         {
             case WallSide.North:
-                setPostion.x = position.x * 2;
-                setPostion.z = position.z * 2;
-                
+                offset.x = position.x * 2;
+                offset.z = position.z * 2;
                 break;
             case WallSide.East:
-                setPostion.x = position.x * 2;
-                setPostion.z = (position.z * 2) + 2;
+                offset.x = position.x * 2;
+                offset.z = (position.z * 2) + 2;
                 break;
             case WallSide.South:
-                setPostion.x = (position.x * 2) + 2;
-                setPostion.z = (position.z * 2) + 2;
+                offset.x = (position.x * 2) + 2;
+                offset.z = (position.z * 2) + 2;
                 break;
             case WallSide.West:
-                setPostion.x = (position.x * 2) + 2;
-                setPostion.z = (position.z * 2);
+                offset.x = (position.x * 2) + 2;
+                offset.z = (position.z * 2);
                 break;
         }
 
@@ -211,25 +206,23 @@ public class GenerateBuilding : MonoBehaviour
         switch (wall.Type)
         {
             case WallType.Normal:
-                SpawnPrefab(NormalWallPrefab, parentTransform, setPostion,
+                SpawnPrefab(NormalWallPrefab, parentTransform, offset,
                     Quaternion.Euler(0.0f, (float) wall.Side, 0.0f));
                 break;
             case WallType.Door:
-                SpawnPrefab(DoorWallPrefab, parentTransform, setPostion, Quaternion.Euler(0.0f, (float) wall.Side, 0.0f)
+                SpawnPrefab(DoorWallPrefab, parentTransform, offset, Quaternion.Euler(0.0f, (float) wall.Side, 0.0f)
                 );
                 break;
             case WallType.Window:
-                SpawnPrefab(WindowWallPrefab, parentTransform, setPostion,
+                SpawnPrefab(WindowWallPrefab, parentTransform, offset,
                     Quaternion.Euler(0.0f, (float) wall.Side, 0.0f));
                 break;
             case WallType.Balcony:
-                SpawnPrefab(BalconyWallPrefab, parentTransform, setPostion,
+                SpawnPrefab(BalconyWallPrefab, parentTransform, offset,
                     Quaternion.Euler(0.0f, (float) wall.Side, 0.0f));
                 break;
         }
     }
-
-
     private void SpawnPrefab(GameObject prefab, Transform parent, Vector3 position, Quaternion rotation)
     {
         var go = Instantiate(prefab, transform.position + position, rotation);

@@ -45,26 +45,89 @@ public class Floor
             case Process.ShrinkColumn:
                 ShrinkColumn(previous);
                 break;
+            case Process.ShrinkRow:
+                ShrinkRow(previous);
+                break;
+            default:
+                //No Change 
+                break;
         }
     }
 
-
-    private void ShrinkColumn(Floor previous)
+    private void ShrinkRow(Floor previous)
     {
+        //Find the row that we want to remove
+        int rowToRemove = 0;
         for (int x = 0; x < Rooms.GetLength(0); x++)
         {
             for (int y = 0; y < Rooms.GetLength(1); y++)
             {
-                if (!Rooms[x, y].HasRoof && Rooms[x, y].IsInterior && (x == 0 | y == 0) )
+                if (x == Rooms.GetLength(0) - 1)
                 {
-                    Rooms[x,y].SetIsInterior(false);
-                    Rooms[x, y].HasRoof = true;
-                    RoomsWithNoRoof--;
-                    previous.Rooms[x, y].HasRoof = true;
-                    previous.Rooms[x, y].RoomRoof = new Roof();
+                    return;
+                }
+
+                if (!Rooms[x, y].HasRoof && Rooms[x, y].IsInterior && Rooms[x + 1, y].IsInterior)
+                {
+                    rowToRemove = x;
+                    break;
                 }
             }
         }
+
+        //Remove the row
+        for (int y = 0; y < Rooms.GetLength(0); y++)
+        {
+            if (!Rooms[rowToRemove, y].HasRoof && Rooms[rowToRemove, y].IsInterior)
+            {
+                Rooms[rowToRemove,y].SetIsInterior(false);
+                Rooms[rowToRemove, y].HasRoof = true;
+                RoomsWithNoRoof--;
+                
+                //Set the previous floor to have a roof
+                previous.Rooms[rowToRemove, y].HasRoof = true;
+                previous.Rooms[rowToRemove, y].RoomRoof = new Roof();
+            }
+        }
+    }
+    
+
+    private void ShrinkColumn(Floor previous)
+    {
+        //Find the column that we want to remove
+        int columnToRemove = 0;
+        for (int x = 0; x < Rooms.GetLength(0); x++)
+        {
+            for (int y = 0; y < Rooms.GetLength(1); y++)
+            {
+                if (y == Rooms.GetLength(1) - 1)
+                {
+                    return;
+                }
+
+                if (!Rooms[x, y].HasRoof && Rooms[x, y].IsInterior && Rooms[x, y + 1].IsInterior)
+                {
+                    columnToRemove = y;
+                    break;
+                }
+            }
+        }
+
+        //Remove the row
+        for (int x = 0; x < Rooms.GetLength(0); x++)
+        {
+            if (!Rooms[x, columnToRemove].HasRoof && Rooms[x, columnToRemove].IsInterior)
+            {
+                Rooms[x,columnToRemove].SetIsInterior(false);
+                Rooms[x, columnToRemove].HasRoof = true;
+                RoomsWithNoRoof--;
+                
+                //Set the previous floor to have a roof
+                previous.Rooms[x, columnToRemove].HasRoof = true;
+                previous.Rooms[x, columnToRemove].RoomRoof = new Roof();
+            }
+        }
+        
     }
 
     //TODO : Select a roof to use 
