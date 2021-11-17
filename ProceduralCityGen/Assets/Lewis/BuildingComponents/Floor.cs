@@ -59,8 +59,6 @@ public class Floor
 
     private void ShrinkRow(Floor previous)
     {
-        Debug.Log("ShrinkRow");
-
         //Find the row that we want to remove
         int rowToRemove = 0;
         for (int x = 0; x < 4; x++)
