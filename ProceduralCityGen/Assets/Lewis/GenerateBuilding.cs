@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum Process
+public enum BuildProcess
 {
     NoChange,
     ShrinkRow,
@@ -37,7 +37,7 @@ public class GenerateBuilding : MonoBehaviour
     //Internal Variables 
     private Building building;
     private List<GameObject> spawnedPrefabs = new List<GameObject>();
-    private Process ProcessToApply;
+    private BuildProcess _buildProcessToApply;
 
     public void Generate()
     {
@@ -59,37 +59,37 @@ public class GenerateBuilding : MonoBehaviour
     //TODO : Move the size variables to the generate function so that everything can be called at once
     private void CreateBuilding(int baseX = 4, int baseY = 4)
     {
-        ProcessToApply = Process.NoChange;
+        _buildProcessToApply = BuildProcess.NoChange;
         //Determine initial symbol 
         building = new Building(baseX, baseY, transform, Quaternion.identity);
 
-        while (building.AddFloor(ProcessToApply))
+        while (building.AddFloor(_buildProcessToApply))
         {
             //If the next floor is going to be the max number of floors, we have to force the next floor to be roofed
             if (building.NumberOfFloors == MaximumFloors - 1)
             {
-                ProcessToApply = Process.ApplyRoof;
+                _buildProcessToApply = BuildProcess.ApplyRoof;
                 continue;
             }
 
             //TODO : The grammar rules could be moved to a scriptable object allowing for easy changes to variation
             //TODO : Work on adding some more variation to the grammar rules 
             //Apply grammar rules
-            switch (ProcessToApply)
+            switch (_buildProcessToApply)
             {
-                case Process.NoChange:
-                    ProcessToApply = Process.ShrinkRow;
+                case BuildProcess.NoChange:
+                    _buildProcessToApply = BuildProcess.ShrinkRow;
                     break;
-                case Process.ShrinkColumn:
-                    ProcessToApply = Process.ShrinkRow;
+                case BuildProcess.ShrinkColumn:
+                    _buildProcessToApply = BuildProcess.ShrinkRow;
                     break;
-                case Process.ShrinkRow:
-                    ProcessToApply = Process.ShrinkColumn;
+                case BuildProcess.ShrinkRow:
+                    _buildProcessToApply = BuildProcess.ShrinkColumn;
                     break;
-                case Process.ShrinkRandom:
-                    ProcessToApply = Process.ApplyRoof;
+                case BuildProcess.ShrinkRandom:
+                    _buildProcessToApply = BuildProcess.ApplyRoof;
                     break;
-                case Process.ApplyRoof:
+                case BuildProcess.ApplyRoof:
                     break;
             }
         }

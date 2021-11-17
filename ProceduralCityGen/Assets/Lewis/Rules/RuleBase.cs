@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class RuleBase : MonoBehaviour
 {
-    public abstract Process GetNextProcess(Process input);
+    public abstract BuildProcess GetNextProcess(BuildProcess input);
 }

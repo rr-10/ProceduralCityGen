@@ -25,7 +25,7 @@ public class Building
         this.sizeY = y;
     }
 
-    public bool AddFloor(Process process)
+    public bool AddFloor(BuildProcess buildProcess)
     {
         Floor floor = new Floor(NumberOfFloors);
         if (NumberOfFloors == 0)
@@ -34,7 +34,7 @@ public class Building
         }
         else
         {
-            floor.CreateFromPreviousFloor(Floors.Last(), process);
+            floor.CreateFromPreviousFloor(Floors.Last(), buildProcess);
         }
         
         //Create the walls for that floor, this function will also place doors, windows and balconies

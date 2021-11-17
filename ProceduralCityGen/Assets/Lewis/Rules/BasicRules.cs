@@ -4,28 +4,28 @@ using UnityEngine;
 
 public class BasicRules : RuleBase
 {
-  public override Process GetNextProcess(Process input)
+  public override BuildProcess GetNextProcess(BuildProcess input)
   {
-    Process toReturn;
+    BuildProcess toReturn;
     switch (input)
     {
-      case Process.NoChange:
-        toReturn =  Process.ShrinkColumn;
+      case BuildProcess.NoChange:
+        toReturn =  BuildProcess.ShrinkColumn;
         break;
-      case Process.ShrinkColumn:
-        toReturn = Process.NoChange;
+      case BuildProcess.ShrinkColumn:
+        toReturn = BuildProcess.NoChange;
         break;
-      case Process.ShrinkRow:
-        toReturn = Process.ApplyRoof;
+      case BuildProcess.ShrinkRow:
+        toReturn = BuildProcess.ApplyRoof;
         break;
-      case Process.ShrinkRandom:
-        toReturn =  Process.ApplyRoof;
+      case BuildProcess.ShrinkRandom:
+        toReturn =  BuildProcess.ApplyRoof;
         break;
-      case Process.ApplyRoof:
-        toReturn =  Process.ApplyRoof;
+      case BuildProcess.ApplyRoof:
+        toReturn =  BuildProcess.ApplyRoof;
         break;
       default:
-        toReturn = Process.ApplyRoof;
+        toReturn = BuildProcess.ApplyRoof;
         break;
     }
 

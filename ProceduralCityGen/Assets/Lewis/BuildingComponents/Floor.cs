@@ -34,21 +34,21 @@ public class Floor
         }
     }
 
-    public void CreateFromPreviousFloor(Floor previous, Process process)
+    public void CreateFromPreviousFloor(Floor previous, BuildProcess buildProcess)
     {
         //TODO : Handle the other processes
         //Get a copy of the previous floor but with only rooms with no roof
         Rooms = (RemoveRoomsWithRoof(previous.Rooms));
 
-        switch (process)
+        switch (buildProcess)
         {
-            case Process.ApplyRoof:
+            case BuildProcess.ApplyRoof:
                 ApplyRoofToAll();
                 break;
-            case Process.ShrinkColumn:
+            case BuildProcess.ShrinkColumn:
                 ShrinkColumn(previous);
                 break;
-            case Process.ShrinkRow:
+            case BuildProcess.ShrinkRow:
                 ShrinkRow(previous);
                 break;
             default:
