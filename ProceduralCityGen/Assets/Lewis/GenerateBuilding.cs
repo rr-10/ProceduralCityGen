@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -52,15 +53,15 @@ public class GenerateBuilding : MonoBehaviour
 
         //Once the building is generated, create it in the scene 
         Render();
-    }                                                     
+    }
 
     //The Create building function will create 
     //TODO : Move the size variables to the generate function so that everything can be called at once
-    private void CreateBuilding(int baseX = 2, int baseY = 2) 
+    private void CreateBuilding(int baseX = 4, int baseY = 4)
     {
-        ProcessToApply = Process.ShrinkColumn;
+        ProcessToApply = Process.NoChange;
         //Determine initial symbol 
-        building = new Building(baseX, baseY, transform, Quaternion.identity); 
+        building = new Building(baseX, baseY, transform, Quaternion.identity);
 
         while (building.AddFloor(ProcessToApply))
         {
@@ -77,13 +78,13 @@ public class GenerateBuilding : MonoBehaviour
             switch (ProcessToApply)
             {
                 case Process.NoChange:
-                    ProcessToApply = Process.ShrinkColumn;
+                    ProcessToApply = Process.ShrinkRow;
                     break;
                 case Process.ShrinkColumn:
-                    ProcessToApply = Process.NoChange;
+                    ProcessToApply = Process.ShrinkRow;
                     break;
                 case Process.ShrinkRow:
-                    ProcessToApply = Process.ApplyRoof;
+                    ProcessToApply = Process.ShrinkColumn;
                     break;
                 case Process.ShrinkRandom:
                     ProcessToApply = Process.ApplyRoof;
@@ -105,7 +106,7 @@ public class GenerateBuilding : MonoBehaviour
 
         spawnedPrefabs.Clear(); // All gameobject in the list should now be destroyed so safe to clear
     }
-    
+
     //Place all the prefabs in the scene to represent the generated building
     private void Render()
     {
@@ -127,7 +128,7 @@ public class GenerateBuilding : MonoBehaviour
 
                     //3d position of room relative to 
                     Vector3 roomPosition = new Vector3(room.Position.x, floor.FloorLevel, room.Position.y);
-                    
+
                     //Draw the room only if it has walls that need drawing
                     if (room.IsInterior)
                     {
@@ -163,7 +164,7 @@ public class GenerateBuilding : MonoBehaviour
 
         SpawnPrefab(FloorPrefab, parentTransform, setPosition, Quaternion.identity);
     }
-    
+
 
     private void PlaceRoof(Roof roof, Transform parentTransform, Vector3 position)
     {
@@ -180,7 +181,7 @@ public class GenerateBuilding : MonoBehaviour
     {
         Vector3 offset = new Vector3();
         offset.y = position.y * 3;
-        
+
         //Set the position offset for each wall based on its direction
         switch (wall.Side)
         {
@@ -223,6 +224,7 @@ public class GenerateBuilding : MonoBehaviour
                 break;
         }
     }
+
     private void SpawnPrefab(GameObject prefab, Transform parent, Vector3 position, Quaternion rotation)
     {
         var go = Instantiate(prefab, transform.position + position, rotation);
