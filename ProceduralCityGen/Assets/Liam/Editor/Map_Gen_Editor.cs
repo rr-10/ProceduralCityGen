@@ -23,7 +23,7 @@ public class Map_Gen_Editor : Editor
         if (GUILayout.Button("WipeMap"))
         {
             Buildings.clearBuildings();
-            veg.ClearVegation();
+            //veg.ClearVegation();
         }
 
 

@@ -283,15 +283,15 @@ public class Map_Generation : MonoBehaviour
             {
                 Buildings_gen.clearBuildings();
                 Buildings_gen.GenerateBuildings(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight);
-                veg.ClearVegation();
-                veg.GenerateVegation(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight, Seed);
-
+                //veg.ClearVegation();
+                //veg.GenerateVegation(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight, Seed);
+                veg.GenerateVegation();
             }
 
             else
             {
                 Buildings_gen.clearBuildings();
-                veg.ClearVegation();
+                //veg.ClearVegation();
             }
         }
 
