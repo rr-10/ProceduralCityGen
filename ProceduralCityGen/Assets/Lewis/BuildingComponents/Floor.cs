@@ -99,7 +99,6 @@ public class Floor
 
     private void ShrinkColumn(Floor previous)
     {
-        Debug.Log("ShrinkColumn");
         //Find the column that we want to remove
         int columnToRemove = 0;
         for (int y = 0; y < Rooms.GetLength(1); y++)

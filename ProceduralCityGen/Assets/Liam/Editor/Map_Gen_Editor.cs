@@ -10,7 +10,7 @@ public class Map_Gen_Editor : Editor
     public override void OnInspectorGUI()
     {
         Map_Generation Map_Gen = (Map_Generation)target;
-        Building_Genertor Buildings = FindObjectOfType<Building_Genertor>();
+        Building_Generator Buildings = FindObjectOfType<Building_Generator>();
         Vegation veg = FindObjectOfType<Vegation>();
         if (DrawDefaultInspector())
             if (Map_Gen.Auto_Update)
@@ -22,7 +22,7 @@ public class Map_Gen_Editor : Editor
         }
         if (GUILayout.Button("WipeMap"))
         {
-            Buildings.clearBuildings();
+            Buildings.ClearBuildings();
             veg.ClearVegation();
         }
 

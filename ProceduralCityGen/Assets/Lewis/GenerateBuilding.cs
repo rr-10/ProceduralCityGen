@@ -55,10 +55,31 @@ public class GenerateBuilding : MonoBehaviour
         Render();
     }
 
+
+    //This is the function that will be called from BuildingGenerator to spawn the building on the terrain 
+    public void Generate(Vector3 position, int size)
+    {  
+        //Get the chances from the editor 
+        DoorPercentChance = setDoorChance;
+        WindowPercentChance = setWindowChance;
+        BalconyPercentChance = setBalconyChance;
+
+        //Generate a new building and spawn all the required prefabs in the scene 
+        CreateBuilding( size, size);
+        Render(position);
+    }
+    
+
     //The Create building function will create 
     //TODO : Move the size variables to the generate function so that everything can be called at once
     private void CreateBuilding(int baseX = 4, int baseY = 4)
     {
+        //TODO : Handle this better
+        if (MaximumFloors == 1 || MaximumFloors == 0)
+        {
+            return;
+        }
+
         _buildProcessToApply = BuildProcess.NoChange;
         //Determine initial symbol 
         building = new Building(baseX, baseY, transform, Quaternion.identity);
@@ -96,7 +117,7 @@ public class GenerateBuilding : MonoBehaviour
     }
 
     //Clear previously created buildings 
-    private void Clear()
+    public void Clear()
     {
         //Destroy every gameobject we spawned 
         foreach (GameObject o in spawnedPrefabs)
@@ -108,10 +129,11 @@ public class GenerateBuilding : MonoBehaviour
     }
 
     //Place all the prefabs in the scene to represent the generated building
-    private void Render()
+    private void Render(Vector3 position = default)
     {
         //Create folder for building
         GameObject buildingFolder = new GameObject($"Building");
+        buildingFolder.transform.position = position;
         spawnedPrefabs.Add(buildingFolder);
 
         foreach (Floor floor in building.Floors)
@@ -119,6 +141,7 @@ public class GenerateBuilding : MonoBehaviour
             //Create a folder for each floor and set parent to buildingFolder
             GameObject floorFolder = new GameObject($"Floor_{floor.FloorLevel}");
             floorFolder.transform.parent = buildingFolder.transform;
+            floorFolder.transform.position = buildingFolder.transform.position;
 
             for (int x = 0; x < floor.Rooms.GetLength(0); x++)
             {
@@ -227,7 +250,7 @@ public class GenerateBuilding : MonoBehaviour
 
     private void SpawnPrefab(GameObject prefab, Transform parent, Vector3 position, Quaternion rotation)
     {
-        var go = Instantiate(prefab, transform.position + position, rotation);
+        var go = Instantiate(prefab, transform.position + position, rotation, parent);
         go.transform.parent = parent;
     }
 }
