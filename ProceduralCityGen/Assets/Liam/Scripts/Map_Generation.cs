@@ -258,7 +258,7 @@ public class Map_Generation : MonoBehaviour
 
         //Create references to scripts that generate buildings, map and vegation
         Display_Map Display = FindObjectOfType<Display_Map>();
-        Building_Genertor Buildings_gen = FindObjectOfType<Building_Genertor>();
+        Building_Generator Buildings_gen = FindObjectOfType<Building_Generator>();
         Vegation veg = FindObjectOfType<Vegation>();
 
         //Just noise map
@@ -281,7 +281,7 @@ public class Map_Generation : MonoBehaviour
 
             if (BuildingsPrefabs == true)
             {
-                Buildings_gen.clearBuildings();
+                Buildings_gen.ClearBuildings();
                 Buildings_gen.GenerateBuildings(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight);
                 //veg.ClearVegation();
                 //veg.GenerateVegation(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight, Seed);
@@ -290,7 +290,7 @@ public class Map_Generation : MonoBehaviour
 
             else
             {
-                Buildings_gen.clearBuildings();
+                Buildings_gen.ClearBuildings();
                 //veg.ClearVegation();
             }
         }

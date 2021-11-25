@@ -46,29 +46,33 @@ public class GenerateBuilding : MonoBehaviour
         BalconyPercentChance = setBalconyChance;
 
         //Clear all prefabs that were previously created 
-        Clear();
+        //Clear();
 
         //Generate the buildings structure
         CreateBuilding();
 
         //Once the building is generated, create it in the scene 
-        Render();
+        Render(new Vector3(100, 10, 400));
     }
 
 
     //This is the function that will be called from BuildingGenerator to spawn the building on the terrain 
     public void Generate(Vector3 position, int size)
-    {  
+    {
+        //Turn this function back on to generate buildings
+        return;
+        
+        
         //Get the chances from the editor 
         DoorPercentChance = setDoorChance;
         WindowPercentChance = setWindowChance;
         BalconyPercentChance = setBalconyChance;
 
         //Generate a new building and spawn all the required prefabs in the scene 
-        CreateBuilding( size, size);
+        CreateBuilding(size, size);
         Render(position);
     }
-    
+
 
     //The Create building function will create 
     //TODO : Move the size variables to the generate function so that everything can be called at once
@@ -250,7 +254,11 @@ public class GenerateBuilding : MonoBehaviour
 
     private void SpawnPrefab(GameObject prefab, Transform parent, Vector3 position, Quaternion rotation)
     {
-        var go = Instantiate(prefab, transform.position + position, rotation, parent);
-        go.transform.parent = parent;
+        var go = Instantiate(prefab, position, rotation, parent);
+
+        //TODO : Figure out why I have to do this
+        go.transform.parent = parent.transform;
+        go.transform.position = parent.transform.position + position;
+
     }
 }
