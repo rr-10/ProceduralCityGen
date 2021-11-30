@@ -51,33 +51,81 @@ public class Floor
             case BuildProcess.ShrinkRow:
                 ShrinkRow(previous);
                 break;
+            case BuildProcess.ShrinkRandom:
+                ShrinkRandom(previous);
+                break;
             default:
                 //No Change 
                 break;
         }
     }
 
+    private void ShrinkRandom(Floor previous)
+    {
+        //Randomly select a direction to shrink in 
+        bool shrinkDirecion = false;
+        if (UnityEngine.Random.Range(0.0f, 1.0f) <= 0.5f)
+        {
+            shrinkDirecion = !shrinkDirecion;
+        }
+        
+        //TODO : This is temporary. Have this function done properly 
+        if (shrinkDirecion)
+        {
+            ShrinkRow(previous);
+        }
+        else
+        {
+            ShrinkColumn(previous);
+        }
+        
+        //Decide how much to shrink 
+        //Apply Shrink
+    }
     private void ShrinkRow(Floor previous)
     {
         //Find the row that we want to remove
         int rowToRemove = 0;
-        for (int x = 0; x < 4; x++)
+        //Randomly take from the left or right of the building 
+        if (UnityEngine.Random.Range(0.0f, 1.0f) <= 0.5f)
         {
-            for (int y = 0; y < 4; y++)
+            for (int x = 0; x < Rooms.GetLength(0); x++)
             {
-                if (x == Rooms.GetLength(0) - 1)
+                for (int y = 0; y < Rooms.GetLength(1); y++)
                 {
-                    //Debug.Log("NOT FOUND!");
-                    return;
-                }
+                    if (x == Rooms.GetLength(0) - 1)
+                    {
+                        return;
+                    }
 
-                if (!Rooms[x, y].HasRoof && Rooms[x, y].IsInterior && Rooms[x + 1, y].IsInterior)
-                {
-                    rowToRemove = x;
-                    goto LoopEnd;
+                    if (!Rooms[x, y].HasRoof && Rooms[x, y].IsInterior && Rooms[x + 1, y].IsInterior)
+                    {
+                        rowToRemove = x;
+                        goto LoopEnd;
+                    }
                 }
             }
         }
+        else
+        {
+            for (int x = Rooms.GetLength(0) - 1; x > 0 ; x--)
+            {
+                for (int y = Rooms.GetLength(1) - 1; y > 0; y--)
+                {
+                    if (x == 1)
+                    {
+                        return;
+                    }
+
+                    if (!Rooms[x, y].HasRoof && Rooms[x, y].IsInterior && Rooms[x - 1, y].IsInterior)
+                    {
+                        rowToRemove = x;
+                        goto LoopEnd;
+                    }
+                }
+            }
+        }
+
         LoopEnd:
 
         //Remove the row
@@ -101,25 +149,50 @@ public class Floor
     {
         //Find the column that we want to remove
         int columnToRemove = 0;
-        for (int y = 0; y < Rooms.GetLength(1); y++)
-        {
-            for (int x = 0; x < Rooms.GetLength(0); x++)
-            {
-                if (y == Rooms.GetLength(0) - 1)
-                {
-                    return;
-                }
 
-                if (!Rooms[x, y].HasRoof && Rooms[x, y].IsInterior && Rooms[x, y + 1].IsInterior)
+        //Randomly take from the front or back of the building 
+        if (UnityEngine.Random.Range(0.0f, 1.0f) <= 0.5f)
+        {
+            for (int y = 0; y < Rooms.GetLength(1); y++)
+            {
+                for (int x = 0; x < Rooms.GetLength(0); x++)
                 {
-                    columnToRemove = y;
-                    goto LoopEnd;
+                    if (y == Rooms.GetLength(0) - 1)
+                    {
+                        return;
+                    }
+        
+                    if (!Rooms[x, y].HasRoof && Rooms[x, y].IsInterior && Rooms[x, y + 1].IsInterior)
+                    {
+                        columnToRemove = y;
+                        goto LoopEnd;
+                    }
                 }
             }
         }
+        else
+        {
+            for (int y = Rooms.GetLength(1) - 1; y > 0; y--)
+            {
+                for (int x = Rooms.GetLength(0) - 1; x > 0; x--)
+                {
+                    if (y == 1 )
+                    {
+                    
+                        return;
+                    }
+                    
+                    if (!Rooms[x, y].HasRoof && Rooms[x, y].IsInterior && Rooms[x, y - 1].IsInterior)
+                    {
+                        columnToRemove = y;
+                        goto LoopEnd;
+                    }
+                }
+            }
+        }
+        
         LoopEnd:
        
-
         //Remove the row
         for (int x = 0; x < Rooms.GetLength(0); x++)
         {
@@ -158,7 +231,45 @@ public class Floor
         return (RoomsWithNoRoof > 0);
     }
 
+    //TODO : We can determine and pass in wether a set of walls can have a balcony from here and replace the floor level with a flog for canHaveBalconies
     public void GenerateWalls()
+    {
+        //Determine which rooms have exterior walls and where those walls are, creating those walls when found
+        for (int x = 0; x < Rooms.GetLength(0); x++)
+        {
+            for (int y = 0; y < Rooms.GetLength(1); y++)
+            {
+                if (Rooms[x, y].IsInterior)
+                {
+                    //North Wall
+                    if (x == 0 || !Rooms[x - 1, y].IsInterior)
+                    {
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.North, false);
+                    }
+                  
+                    //East Wall
+                    if ((y == Rooms.GetLength(1) - 1) || !Rooms[x, y + 1].IsInterior)
+                    {
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.East, false);
+                    }
+
+                    //West Wall
+                    if (y == 0 || !Rooms[x, y - 1].IsInterior)
+                    {
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.West, false);
+                    }
+
+                    //South Wall
+                    if ((x == Rooms.GetLength(0) - 1) || !Rooms[x + 1, y].IsInterior)
+                    {
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.South, false);
+                    }
+                }
+            }
+        }
+    }
+    
+    public void GenerateWalls(Floor previous)
     {
         //Determine which rooms have exterior walls and where those walls are, creating those walls when found
         for (int x = 0; x < Rooms.GetLength(0); x++)
@@ -170,41 +281,41 @@ public class Floor
                     //North Wall
                     if (x == 0)
                     {
-                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.North);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.North, true);
                     }
                     else if (!Rooms[x - 1, y].IsInterior)
                     {
-                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.North);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.North, !previous.Rooms[x - 1, y].IsInterior);
                     }
 
                     //East Wall
-                    if (y == Rooms.GetLength(1) - 1)
+                    if ((y == Rooms.GetLength(1) - 1))
                     {
-                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.East);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.East, true);
                     }
                     else if (!Rooms[x, y + 1].IsInterior)
                     {
-                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.East);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.East, !previous.Rooms[x, y + 1].IsInterior);
                     }
 
                     //West Wall
                     if (y == 0)
                     {
-                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.West);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.West, true);
                     }
                     else if (!Rooms[x, y - 1].IsInterior)
                     {
-                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.West);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.West, !previous.Rooms[x, y - 1].IsInterior);
                     }
 
                     //South Wall
-                    if (x == Rooms.GetLength(0) - 1)
+                    if ((x == Rooms.GetLength(0) - 1))
                     {
-                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.South);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.South, true);
                     }
                     else if (!Rooms[x + 1, y].IsInterior)
                     {
-                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.South);
+                        Rooms[x, y].CreateWalls(FloorLevel, WallSide.South, !previous.Rooms[x + 1, y].IsInterior);
                     }
                 }
             }

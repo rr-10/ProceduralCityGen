@@ -47,8 +47,7 @@ public class Building_Generator : MonoBehaviour
                         y * Meshh.transform.localScale.z +
                         Meshh.transform.localScale.z / 2; //Z is used for Y axis in the 3d world
                     RelativePosition.y =
-                        HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y +
-                        (cube.transform.localScale.y / 2.2f); // Calulate height
+                        HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y; // Calulate height
                     
                     gen.Generate(RelativePosition, 3);
                     
@@ -61,8 +60,7 @@ public class Building_Generator : MonoBehaviour
                     RelativePosition.x += x * Meshh.transform.localScale.x + Meshh.transform.localScale.x;
                     RelativePosition.z -= y * Meshh.transform.localScale.z + Meshh.transform.localScale.z;
                     RelativePosition.y =
-                        HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y +
-                        (cube.transform.localScale.y / 1.8f);
+                        HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y ;
                     
                     gen.Generate(RelativePosition, 4);
                 }
@@ -75,10 +73,9 @@ public class Building_Generator : MonoBehaviour
                     RelativePosition.z -= y * Meshh.transform.localScale.z + Meshh.transform.localScale.z +
                                           Meshh.transform.localScale.z / 2;
                     RelativePosition.y =
-                        HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y +
-                        (cube.transform.localScale.y / 1.5f);
+                        HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y;
 
-                    gen.Generate(RelativePosition, 4);
+                    gen.Generate(RelativePosition, 5);
                 }
             }
         }

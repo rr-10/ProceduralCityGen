@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum BuildProcess
 {
@@ -33,6 +34,7 @@ public class GenerateBuilding : MonoBehaviour
     public static float WindowPercentChance = 0.4f;
     [SerializeField] private float setBalconyChance;
     public static float BalconyPercentChance = 0.35f;
+    [SerializeField] private RuleBase Rule;
 
     //Internal Variables 
     private Building building;
@@ -46,13 +48,13 @@ public class GenerateBuilding : MonoBehaviour
         BalconyPercentChance = setBalconyChance;
 
         //Clear all prefabs that were previously created 
-        //Clear();
+        Clear();
 
         //Generate the buildings structure
         CreateBuilding();
 
         //Once the building is generated, create it in the scene 
-        Render(new Vector3(100, 10, 400));
+        Render();
     }
 
 
@@ -75,9 +77,15 @@ public class GenerateBuilding : MonoBehaviour
 
 
     //The Create building function will create 
-    //TODO : Move the size variables to the generate function so that everything can be called at once
+    
     private void CreateBuilding(int baseX = 4, int baseY = 4)
     {
+        //Handle the rules not being set 
+        if (!Rule)
+        {
+            Rule = ScriptableObject.CreateInstance<BasicRules>();
+        }
+        
         //TODO : Handle this better
         if (MaximumFloors == 1 || MaximumFloors == 0)
         {
@@ -86,7 +94,7 @@ public class GenerateBuilding : MonoBehaviour
 
         _buildProcessToApply = BuildProcess.NoChange;
         //Determine initial symbol 
-        building = new Building(baseX, baseY, transform, Quaternion.identity);
+        building = new Building(baseX, baseY);
 
         while (building.AddFloor(_buildProcessToApply))
         {
@@ -97,26 +105,10 @@ public class GenerateBuilding : MonoBehaviour
                 continue;
             }
 
-            //TODO : The grammar rules could be moved to a scriptable object allowing for easy changes to variation
-            //TODO : Work on adding some more variation to the grammar rules 
+            //TODO : Grammar Rules Overhaul
             //Apply grammar rules
-            switch (_buildProcessToApply)
-            {
-                case BuildProcess.NoChange:
-                    _buildProcessToApply = BuildProcess.ShrinkRow;
-                    break;
-                case BuildProcess.ShrinkColumn:
-                    _buildProcessToApply = BuildProcess.ShrinkRow;
-                    break;
-                case BuildProcess.ShrinkRow:
-                    _buildProcessToApply = BuildProcess.ShrinkColumn;
-                    break;
-                case BuildProcess.ShrinkRandom:
-                    _buildProcessToApply = BuildProcess.ApplyRoof;
-                    break;
-                case BuildProcess.ApplyRoof:
-                    break;
-            }
+
+            _buildProcessToApply = Rule.GetNextProcess(_buildProcessToApply);
         }
     }
 

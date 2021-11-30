@@ -22,7 +22,7 @@ public class Room
         this.IsInterior = flag;
     }
 
-    public void CreateWalls(int floorLevel, WallSide side)
+    public void CreateWalls(int floorLevel, WallSide side, bool canBeBalcony)
     {
         //Create list of walls if needed 
         if (Walls == null) Walls = new List<Wall>();
@@ -45,14 +45,15 @@ public class Room
         }
         else
         {
-            if (UnityEngine.Random.Range(0.0f, 1.0f) <= GenerateBuilding.BalconyPercentChance)
-            {
-                Walls.Add(new Wall(WallType.Balcony, side) );
-            }
-            else if (UnityEngine.Random.Range(0.0f, 1.0f) <= GenerateBuilding.WindowPercentChance)
+            if (UnityEngine.Random.Range(0.0f, 1.0f) <= GenerateBuilding.WindowPercentChance)
             {
                 Walls.Add(new Wall(WallType.Window, side));
             }
+            else if (canBeBalcony && UnityEngine.Random.Range(0.0f, 1.0f) <= GenerateBuilding.BalconyPercentChance)
+            {
+                Walls.Add(new Wall(WallType.Balcony, side) );
+            }
+           
             else
             {
                 Walls.Add(new Wall(WallType.Normal, side));

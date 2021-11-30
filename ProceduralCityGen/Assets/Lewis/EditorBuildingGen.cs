@@ -22,6 +22,9 @@ public class EditorBuildingGen : Editor
     private SerializedProperty m_windowPercentChance;
     private SerializedProperty m_balconyPercentChance;
     private SerializedProperty m_maximumFloors;
+    
+    //Rule
+    private SerializedProperty m_rule;
 
     protected static bool showPrefabs = true;
     protected static bool showWallPrefabs = true;
@@ -40,10 +43,15 @@ public class EditorBuildingGen : Editor
         m_windowPercentChance = m_object.FindProperty("setWindowChance");
         m_balconyPercentChance = m_object.FindProperty("setBalconyChance");
         m_maximumFloors = m_object.FindProperty("MaximumFloors");
+
+        m_rule = m_object.FindProperty("Rule");
     }
 
     public override void OnInspectorGUI()
     {
+        EditorGUILayout.PropertyField(m_rule);
+        
+        
         EditorGUILayout.Slider(m_doorPercentChance, 0.0f, 1.0f);
         EditorGUILayout.Slider(m_windowPercentChance, 0.0f, 1.0f);
         EditorGUILayout.Slider(m_balconyPercentChance, 0.0f, 1.0f);

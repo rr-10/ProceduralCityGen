@@ -10,36 +10,33 @@ public class Building
 
     public int NumberOfFloors { get; private set; } = 0;
 
-    public Transform Offset;
-    public Quaternion Rotation;
 
     private int sizeX = 0;
     private int sizeY = 0;
 
-    public Building(int x, int y , Transform offset, Quaternion rotation)
+    public Building(int x, int y)
     {
         Floors = new List<Floor>();
-        this.Offset = offset;
-        this.Rotation = rotation;
         this.sizeX = x;
         this.sizeY = y;
     }
 
     public bool AddFloor(BuildProcess buildProcess)
     {
+        //Create a new floor and generate the walls, the first floor is generated from scratch and following floors have to be generated from the previous floor
         Floor floor = new Floor(NumberOfFloors);
         if (NumberOfFloors == 0)
         {
-            floor.CreateFirstFloor(sizeX, sizeY); 
+            floor.CreateFirstFloor(sizeX, sizeY);
+            floor.GenerateWalls();
         }
         else
         {
             floor.CreateFromPreviousFloor(Floors.Last(), buildProcess);
+            floor.GenerateWalls(Floors.Last());
         }
-        
-        //Create the walls for that floor, this function will also place doors, windows and balconies
-        floor.GenerateWalls();
-        
+
+
         Floors.Add(floor);
         NumberOfFloors++;
 
