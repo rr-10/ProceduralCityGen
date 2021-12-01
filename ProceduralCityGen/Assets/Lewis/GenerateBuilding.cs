@@ -40,7 +40,6 @@ public class GenerateBuilding : MonoBehaviour
     private Building building;
     private List<GameObject> spawnedPrefabs = new List<GameObject>();
     private BuildProcess _buildProcessToApply;
-
     public void Generate()
     {
         DoorPercentChance = setDoorChance;
@@ -62,9 +61,8 @@ public class GenerateBuilding : MonoBehaviour
     public void Generate(Vector3 position, int size)
     {
         //Turn this function back on to generate buildings
-        //return;
-        
-        
+        //return;s        
+
         //Get the chances from the editor 
         DoorPercentChance = setDoorChance;
         WindowPercentChance = setWindowChance;
@@ -72,20 +70,19 @@ public class GenerateBuilding : MonoBehaviour
 
         //Generate a new building and spawn all the required prefabs in the scene 
         CreateBuilding(size, size);
-        Render(position);
+        Render(position, new Vector3(-45f, 45f, -45f));
     }
 
-
-    //The Create building function will create 
-    
     private void CreateBuilding(int baseX = 4, int baseY = 4)
     {
+        //TODO : Choose a colour for each of the buildings here 
+
         //Handle the rules not being set 
         if (!Rule)
         {
             Rule = ScriptableObject.CreateInstance<BasicRules>();
         }
-        
+
         //TODO : Handle this better
         if (MaximumFloors == 1 || MaximumFloors == 0)
         {
@@ -105,7 +102,7 @@ public class GenerateBuilding : MonoBehaviour
                 _buildProcessToApply = BuildProcess.ApplyRoof;
                 continue;
             }
-            
+
             //Apply grammar rules that are created by the user 
             _buildProcessToApply = Rule.GetNextProcess(_buildProcessToApply);
         }
@@ -124,7 +121,7 @@ public class GenerateBuilding : MonoBehaviour
     }
 
     //Place all the prefabs in the scene to represent the generated building
-    private void Render(Vector3 position = default)
+    private void Render(Vector3 position = default, Vector3 rotation = default)
     {
         //Create folder for building
         GameObject buildingFolder = new GameObject($"Building");
@@ -137,7 +134,7 @@ public class GenerateBuilding : MonoBehaviour
             GameObject floorFolder = new GameObject($"Floor_{floor.FloorLevel}");
             floorFolder.transform.parent = buildingFolder.transform;
             floorFolder.transform.position = buildingFolder.transform.position;
-
+         
             for (int x = 0; x < floor.Rooms.GetLength(0); x++)
             {
                 for (int y = 0; y < floor.Rooms.GetLength(1); y++)
@@ -171,6 +168,9 @@ public class GenerateBuilding : MonoBehaviour
                 }
             }
         }
+
+        buildingFolder.transform.eulerAngles = rotation;
+
     }
 
     private void PlaceFloor(Transform parentTransform, Vector3 position)
@@ -226,19 +226,19 @@ public class GenerateBuilding : MonoBehaviour
         {
             case WallType.Normal:
                 SpawnPrefab(NormalWallPrefab, parentTransform, offset,
-                    Quaternion.Euler(0.0f, (float) wall.Side, 0.0f));
+                    Quaternion.Euler(0.0f, (float)wall.Side, 0.0f));
                 break;
             case WallType.Door:
-                SpawnPrefab(DoorWallPrefab, parentTransform, offset, Quaternion.Euler(0.0f, (float) wall.Side, 0.0f)
+                SpawnPrefab(DoorWallPrefab, parentTransform, offset, Quaternion.Euler(0.0f, (float)wall.Side, 0.0f)
                 );
                 break;
             case WallType.Window:
                 SpawnPrefab(WindowWallPrefab, parentTransform, offset,
-                    Quaternion.Euler(0.0f, (float) wall.Side, 0.0f));
+                    Quaternion.Euler(0.0f, (float)wall.Side, 0.0f));
                 break;
             case WallType.Balcony:
                 SpawnPrefab(BalconyWallPrefab, parentTransform, offset,
-                    Quaternion.Euler(0.0f, (float) wall.Side, 0.0f));
+                    Quaternion.Euler(0.0f, (float)wall.Side, 0.0f));
                 break;
         }
     }
@@ -250,6 +250,5 @@ public class GenerateBuilding : MonoBehaviour
         //TODO : Figure out why I have to do this
         go.transform.parent = parent.transform;
         go.transform.position = parent.transform.position + position;
-
     }
 }

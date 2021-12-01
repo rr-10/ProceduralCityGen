@@ -6,8 +6,8 @@ public class GridSpawnBuilding : MonoBehaviour
 {
     GenerateBuilding gen;
 
-    private int gridX = 20;
-    private int gridY = 20;
+    private int gridX = 10;
+    private int gridY = 10;
     public int Spacing = 100;
 
     // Start is called before the first frame update

@@ -35,11 +35,12 @@ public class Floor
     }
 
     public void CreateFromPreviousFloor(Floor previous, BuildProcess buildProcess)
-    {
-        //TODO : Handle the other processes
+    {      
         //Get a copy of the previous floor but with only rooms with no roof
         Rooms = (RemoveRoomsWithRoof(previous.Rooms));
 
+
+        //Apply the correct building proceess 
         switch (buildProcess)
         {
             case BuildProcess.ApplyRoof:
