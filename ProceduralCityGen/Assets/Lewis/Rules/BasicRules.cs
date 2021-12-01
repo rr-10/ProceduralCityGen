@@ -45,6 +45,34 @@ public class BasicRules : RuleBase
         }
 
         return toReturn;
+    }    
+
+    //Correct the weights of each chance by dividing by the number of choices 
+    public override void CorrectWeights()
+    {
+        //From No Change 
+        for (int i = 0; i < fromNoChange.Length; i++)
+        {       
+            fromNoChange[i].SelectionChance = fromNoChange[i].SelectionChance / fromNoChange.Length;
+        }
+
+        //From ShrinkColumn
+        for (int i = 0; i < fromShrinkColumn.Length; i++)
+        {
+            fromShrinkColumn[i].SelectionChance = fromShrinkColumn[i].SelectionChance / fromShrinkColumn.Length;
+        }
+
+        //From ShrinkRow
+        for (int i = 0; i < fromShrinkRow.Length; i++)
+        {
+            fromShrinkRow[i].SelectionChance = fromShrinkRow[i].SelectionChance / fromShrinkRow.Length;
+        }
+
+        //From ShrinkRandom
+        for (int i = 0; i < fromShrinkRandom.Length; i++)
+        {
+            fromShrinkRandom[i].SelectionChance = fromShrinkRandom[i].SelectionChance / fromShrinkRandom.Length;
+        }
     }
 
     private BuildProcess ResolveSymbol(ruleWithWeight[] previous)

@@ -82,6 +82,7 @@ public class GenerateBuilding : MonoBehaviour
         {
             Rule = ScriptableObject.CreateInstance<BasicRules>();
         }
+        Rule.CorrectWeights();
 
         //TODO : Handle this better
         if (MaximumFloors == 1 || MaximumFloors == 0)
