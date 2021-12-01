@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: DefaultRule
   m_EditorClassIdentifier: 
   fromNoChange:
-  - NextRule: 1
-    SelectionChance: 0.321
+  - NextRule: 3
+    SelectionChance: 1
   - NextRule: 2
-    SelectionChance: 0.985
+    SelectionChance: 0.518
   fromShrinkColumn:
-  - NextRule: 1
+  - NextRule: 4
     SelectionChance: 0.752
   - NextRule: 4
     SelectionChance: 0.696
@@ -27,4 +27,4 @@ MonoBehaviour:
     SelectionChance: 0.676
   fromShrinkRandom:
   - NextRule: 3
-    SelectionChance: 0.268
+    SelectionChance: 0.192

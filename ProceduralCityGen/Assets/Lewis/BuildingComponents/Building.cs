@@ -28,6 +28,11 @@ public class Building
         if (NumberOfFloors == 0)
         {
             floor.CreateFirstFloor(sizeX, sizeY);
+
+            if (buildProcess == BuildProcess.ApplyRoof)
+            {
+                floor.ApplyRoofToAll();
+            }
             floor.GenerateWalls();
         }
         else

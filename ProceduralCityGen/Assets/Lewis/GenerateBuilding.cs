@@ -62,7 +62,7 @@ public class GenerateBuilding : MonoBehaviour
     public void Generate(Vector3 position, int size)
     {
         //Turn this function back on to generate buildings
-        return;
+        //return;
         
         
         //Get the chances from the editor 
@@ -92,6 +92,7 @@ public class GenerateBuilding : MonoBehaviour
             return;
         }
 
+        //TODO : This should be determined by the rule that is created by the user 
         _buildProcessToApply = BuildProcess.NoChange;
         //Determine initial symbol 
         building = new Building(baseX, baseY);
@@ -104,10 +105,8 @@ public class GenerateBuilding : MonoBehaviour
                 _buildProcessToApply = BuildProcess.ApplyRoof;
                 continue;
             }
-
-            //TODO : Grammar Rules Overhaul
-            //Apply grammar rules
-
+            
+            //Apply grammar rules that are created by the user 
             _buildProcessToApply = Rule.GetNextProcess(_buildProcessToApply);
         }
     }
