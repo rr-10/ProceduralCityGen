@@ -15,42 +15,46 @@ public class Map_Generation : MonoBehaviour
     public bool value_noise;
     public bool Simplex_noise;
 
-    //Type of map to dawy
+
+    //Type of map to draw
     public enum Draw_Mode { NoiseMap, ColourMap, Mesh };
     public Draw_Mode DrawMap;
-
-    //Type of Noise to use as base
+    //type of noise to use as the base noise map
     public enum Noise_Type { Perlin, Value, simplex }
-    public Noise_Type NoiseType;
+    public Noise_Type Base_NoiseType;
 
     //Settings that affect overall outcome of terrain
+    [Space(25)]
     public int Octaves;
     [Range(0, 1)]
-    public float Amplitude;
+    public float Amplitude; 
     public float Frequency;
     public int Seed;
-    public Vector2 OffSet;
+    public Vector2 OffSet; //move around map
     public float MeshHeight;
     public AnimationCurve MeshHeightCurve;
 
+
+    [Space(25)]
     //enable showing bulding location and spawning them
     public bool Buildings;
     public bool BuildingsPrefabs;
+    public bool Tree_prefabs;
+    public bool erosion = false;
+    public int Rain_iterations = 30000;
+    public double FlatLand = 0.0008;
 
-
-    //TODO add vegation option
-
-    //value used to check how flat land needs to be to have a building
-    public double FlatLand = 0.0050;
-
-
-
-    //Enable updating of terrain in editor 
+   
     public bool Auto_Update;
+
+    float[,] Map_Noise;
+    Color[] Map_Colour;
+    int[] bulidingMap;
 
     //Used in editor to create the colours of the map
     public Terrain[] Biomes;
     [System.Serializable]
+
     public struct Terrain //Struct for sorting colours on map
     {
         public string name;
@@ -66,17 +70,135 @@ public class Map_Generation : MonoBehaviour
 
         //Set base type of map
         int type = 1;
-        if (NoiseType == Noise_Type.Value)
+        if (Base_NoiseType == Noise_Type.Value)
             type = 2;
-        else if (NoiseType == Noise_Type.simplex)
+        else if (Base_NoiseType == Noise_Type.simplex)
             type = 3;
 
         //Generate a noise map
-        float[,] Map_Noise = Noise_Maps.GenNoiseMap(Width, Height, Seed, Scale_Noise, Octaves, Amplitude, Frequency, OffSet, Perlin_Noise, value_noise, Simplex_noise, type);
+        Map_Noise = Noise_Maps.GenNoiseMap(Width, Height, Seed, Scale_Noise, Octaves, Amplitude, Frequency, OffSet, Perlin_Noise, value_noise, Simplex_noise, type);
 
         //colouring the map
-        Color[] Map_Colour = new Color[Width * Height];
+        Map_Colour = new Color[Width * Height];
 
+
+        if (erosion == true)
+        {
+            erode();
+        }
+
+        ColourMap();
+
+        FindBuildings();
+
+
+        //Create references to scripts that generate buildings, map and vegation
+        Display_Map Display = FindObjectOfType<Display_Map>();
+        Building_Generator Buildings_gen = FindObjectOfType<Building_Generator>();
+        Vegation veg = FindObjectOfType<Vegation>();
+
+        
+
+        //Just noise map
+        if (DrawMap == Draw_Mode.NoiseMap)
+        {
+            Display.Drawtextures(Textures.textureHeightMap(Map_Noise));
+        }
+
+
+        //just colour map
+        else if (DrawMap == Draw_Mode.ColourMap)
+            Display.Drawtextures(Textures.TextureFromMap(Map_Colour, Width, Height));
+
+
+
+        //Mesh with possible buildings and vegation
+        else if (DrawMap == Draw_Mode.Mesh)
+        {
+            
+            //Display script activates creation of mesh
+            Display.DrawMesh(MapMeshGenertion.GenerateMeshTerrain(Map_Noise, MeshHeight, MeshHeightCurve), Textures.TextureFromMap(Map_Colour, Width, Height));
+
+
+            if (BuildingsPrefabs == true)
+            {
+                Buildings_gen.ClearBuildings();
+                Buildings_gen.GenerateBuildings(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight); 
+            }
+            else
+                Buildings_gen.ClearBuildings();
+
+            if (Tree_prefabs == true)
+            {
+                //veg.ClearVegation();
+                // veg.GenerateVegation(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight, Seed);
+                veg.GenerateVegation();
+            }
+            //else
+               // veg.ClearVegation();
+           
+        }
+
+
+    }
+
+
+    //make sure editor values are valide
+    private void OnValidate()
+    {
+        //Make sure editor values are not invalid or simulation breaking
+        if (Width < 1)
+            Width = 1;
+
+        if (Height < 1)
+            Height = 1;
+
+        if (Frequency < 1)
+            Frequency = 1;
+
+        if (Octaves < 1)
+            Octaves = 1;
+
+        if (Perlin_Noise == false && Simplex_noise == false && value_noise == false)
+            Perlin_Noise = true;
+
+        if (Octaves > 20)
+            Octaves = 20;
+
+        if (Height != Width)
+            Height = Width;
+
+    }
+
+    void erode()
+    {
+        float[] heightmap = new float[Width * Height];
+
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                heightmap[y * Width + x] = Map_Noise[x, y];
+            }
+        }
+        
+        Erosion lol = FindObjectOfType<Erosion>();
+
+        lol.erosion(Seed, heightmap, Rain_iterations, Width);
+
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                Map_Noise[x, y] = heightmap[y * Width + x];
+            }
+        }
+    }
+
+
+
+    void ColourMap()
+    {
         for (int y = 0; y < Height; y++)
         {
             for (int x = 0; x < Width; x++)
@@ -96,12 +218,13 @@ public class Map_Generation : MonoBehaviour
 
             }
         }
+    }
 
+    void FindBuildings()
+    {
+        bulidingMap = new int[Width * Height];
 
-        //Stores where buildings are located on the map
-        int[] bulidingMap = new int[Width * Height];
-
-        if (Buildings == true)
+        if (Buildings == true || BuildingsPrefabs == true)
         {
             for (int y = 0; y < Height - 3; y++)
             {
@@ -112,8 +235,6 @@ public class Map_Generation : MonoBehaviour
 
                     if (CurrentHeight > Biomes[3].height && CurrentHeight < Biomes[6].height) //add max height
                     {
-
-
 
 
                         for (int i = 3; i > 0; i--)
@@ -246,82 +367,11 @@ public class Map_Generation : MonoBehaviour
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-        //Create references to scripts that generate buildings, map and vegation
-        Display_Map Display = FindObjectOfType<Display_Map>();
-        Building_Generator Buildings_gen = FindObjectOfType<Building_Generator>();
-        Vegation veg = FindObjectOfType<Vegation>();
-
-        //Just noise map
-        if (DrawMap == Draw_Mode.NoiseMap)
-        {
-            Display.Drawtextures(Textures.textureHeightMap(Map_Noise));
-        }
-
-        //just colour map
-        else if (DrawMap == Draw_Mode.ColourMap)
-            Display.Drawtextures(Textures.TextureFromMap(Map_Colour, Width, Height));
-
-
-        //Mesh with possible buildings and vegation
-        else if (DrawMap == Draw_Mode.Mesh)
-        {
-            //Display script activates creation of mesh
-            Display.DrawMesh(MapMeshGenertion.GenerateMeshTerrain(Map_Noise, MeshHeight, MeshHeightCurve), Textures.TextureFromMap(Map_Colour, Width, Height));
-
-
-            if (BuildingsPrefabs == true)
-            {
-                Buildings_gen.ClearBuildings();
-                Buildings_gen.GenerateBuildings(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight);
-                //veg.ClearVegation();
-                //veg.GenerateVegation(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight, Seed);
-                veg.GenerateVegation();
-            }
-
-            else
-            {
-                Buildings_gen.ClearBuildings();
-                //veg.ClearVegation();
-            }
-        }
-
-
     }
 
 
-    //make sure editor values are valide
-    private void OnValidate()
-    {
-        //Make sure editor values are not invalid or simulation breaking
-        if (Width < 1)
-            Width = 1;
 
-        if (Height < 1)
-            Height = 1;
 
-        if (Frequency < 1)
-            Frequency = 1;
-
-        if (Octaves < 1)
-            Octaves = 1;
-
-        if (Perlin_Noise == false && Simplex_noise == false && value_noise == false)
-            Perlin_Noise = true;
-
-        if (Octaves > 20)
-            Octaves = 20;
-
-    }
 
 
 }
