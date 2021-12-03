@@ -20,13 +20,19 @@ public class Map_Gen_Editor : Editor
         {
             Map_Gen.Generate_Map();
         }
+
         if (GUILayout.Button("WipeMap"))
         {
             Buildings.ClearBuildings();
             //veg.ClearVegation();
         }
 
-
+        if (GUILayout.Button("random"))
+        {
+            Map_Gen.randomgen();
+            
+            
+        }
         //test
     }
 }

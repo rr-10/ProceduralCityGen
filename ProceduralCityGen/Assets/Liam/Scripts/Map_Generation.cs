@@ -44,9 +44,9 @@ public class Map_Generation : MonoBehaviour
     public int Rain_iterations = 30000;
     public double FlatLand = 0.0008;
 
-   
+    public bool random = false;
     public bool Auto_Update;
-
+    public bool screnshot = false;
     float[,] Map_Noise;
     Color[] Map_Colour;
     int[] bulidingMap;
@@ -81,6 +81,21 @@ public class Map_Generation : MonoBehaviour
         //colouring the map
         Map_Colour = new Color[Width * Height];
 
+
+        if (random == true)
+        {
+            System.Random Ran_Seed = new System.Random();
+
+            int truee = (Ran_Seed.Next(0, 1));
+
+            if (truee == 1)
+            {
+                erosion = true;
+            }
+            else
+                erosion = false;
+
+        }
 
         if (erosion == true)
         {
@@ -140,6 +155,35 @@ public class Map_Generation : MonoBehaviour
         }
 
 
+        if (screnshot == true)
+        {
+            Erosion lol = FindObjectOfType<Erosion>();
+
+            //todo fix data bugs
+
+            Debug.Log(Amplitude);
+            var stampString = string.Format("Noises_{0}-{1:00}-{2:00}-{3:00}-{4:00}-{5:00}-{6:00}", Perlin_Noise, value_noise, Simplex_noise, Amplitude, Frequency , erosion, Rain_iterations);
+
+            var sString = string.Format("{0}-{1:00}-{2:00}_{3:00}-{4:00}-{5:00}-{6:00}-{7:00}-{8:00}-{9:00}-{10:00}", lol.inertia, lol.erosionRadius, lol.sediment_amount_capicty, lol.sediment_amount_capicty_min, lol.disolve_rate, lol.deposit, lol.evaportion_rate, lol.gravity, lol.max_DropletLife, lol.rain_rate, lol.inital_speed, lol.erodeSpeed);
+
+            switch (type)
+            {
+
+                case 1:
+                    ScreenCapture.CaptureScreenshot("ScreenShots/Perlin/" + stampString + "Erosion" +sString + ".png");
+                    break;
+                case 2:
+                    ScreenCapture.CaptureScreenshot("ScreenShots/Value/" + stampString + "Erosion" + sString + ".png");
+                    break;
+                case 3:
+                    ScreenCapture.CaptureScreenshot("ScreenShots/Simplex/" + stampString + "Erosion" + sString + ".png");
+                    break;
+                default:
+                    Debug.Log("taset");
+                    break;
+            }
+
+        }
     }
 
 
@@ -183,6 +227,28 @@ public class Map_Generation : MonoBehaviour
         }
         
         Erosion lol = FindObjectOfType<Erosion>();
+        
+        if (random == true)
+        {
+            
+            System.Random Ran_Seed = new System.Random();
+            
+            lol.inertia = (float)Ran_Seed.Next(0, 100) / 100;
+            lol.erosionRadius = (Ran_Seed).Next(3, 15);
+            lol.sediment_amount_capicty = (float)(Ran_Seed).Next(1, 140) / 100;
+            lol.sediment_amount_capicty_min = (float)(Ran_Seed).Next(0, 30) / 10;
+            lol.disolve_rate = (float)(Ran_Seed).Next(0,100) / 100;
+            lol.deposit = (float)(Ran_Seed).Next(0,30) / 10;
+            lol.evaportion_rate = (float)(Ran_Seed).Next(0, 30) / 10;
+            lol.gravity = (Ran_Seed).Next(1, 50);
+            lol.max_DropletLife = (float)(Ran_Seed).Next(10, 50);
+            lol.rain_rate = (Ran_Seed).Next(1, 10);
+            lol.inital_speed = (Ran_Seed).Next(1, 10);
+            lol.erodeSpeed = (float)(Ran_Seed).Next(1, 100) / 100;
+            
+
+        }
+
 
         lol.erosion(Seed, heightmap, Rain_iterations, Width);
 
@@ -233,7 +299,7 @@ public class Map_Generation : MonoBehaviour
                     //loop through for building sizes
                     float CurrentHeight = Map_Noise[x, y];
 
-                    if (CurrentHeight > Biomes[3].height && CurrentHeight < Biomes[6].height) //add max height
+                    if (CurrentHeight > Biomes[2].height && CurrentHeight < Biomes[5].height) //add max height
                     {
 
 
@@ -370,8 +436,60 @@ public class Map_Generation : MonoBehaviour
     }
 
 
+    public void randomgen()
+    {
 
 
+        System.Random Ran_Seed = new System.Random();
+
+        int xd = Ran_Seed.Next(1, 2);
+
+        if (xd == 1)
+            Perlin_Noise = true;
+        else
+            Perlin_Noise = false;
+
+        xd = Ran_Seed.Next(3, 4);
+
+        if (xd == 3)
+            value_noise = true;
+        else
+            value_noise = false;
+
+        xd = Ran_Seed.Next(4, 5);
+
+        if (xd == 4)
+            Simplex_noise = true;
+        else
+            Simplex_noise = false;
 
 
+        xd = Ran_Seed.Next(1, 4);
+        Rain_iterations = (Ran_Seed).Next(20000, 65000);
+        switch (xd)
+        {
+            case 1:
+                Base_NoiseType = Noise_Type.Perlin;
+
+                break;
+
+            case 2:
+                Base_NoiseType = Noise_Type.simplex;
+
+                break;
+
+            case 3:
+                Base_NoiseType = Noise_Type.Value;
+                break;
+            default:
+                break;
+        }
+
+        Amplitude = (float)Ran_Seed.Next(15, 80) / 100;
+        Frequency = (float)Ran_Seed.Next(5, 25) / 10;
+
+        Generate_Map();
+
+
+    }
 }
