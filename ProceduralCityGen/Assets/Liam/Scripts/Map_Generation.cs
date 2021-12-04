@@ -15,6 +15,7 @@ public class Map_Generation : MonoBehaviour
     public bool value_noise;
     public bool Simplex_noise;
 
+    public int randomsA = 100;
 
     //Type of map to draw
     public enum Draw_Mode { NoiseMap, ColourMap, Mesh };
@@ -86,7 +87,7 @@ public class Map_Generation : MonoBehaviour
         {
             System.Random Ran_Seed = new System.Random();
 
-            int truee = (Ran_Seed.Next(0, 1));
+            int truee = (Ran_Seed.Next(0, 2));
 
             if (truee == 1)
             {
@@ -154,34 +155,44 @@ public class Map_Generation : MonoBehaviour
            
         }
 
-
-        if (screnshot == true)
+        
+        if (screnshot == true )
         {
             Erosion lol = FindObjectOfType<Erosion>();
 
             //todo fix data bugs
 
-            Debug.Log(Amplitude);
-            var stampString = string.Format("Noises_{0}-{1:00}-{2:00}-{3:00}-{4:00}-{5:00}-{6:00}", Perlin_Noise, value_noise, Simplex_noise, Amplitude, Frequency , erosion, Rain_iterations);
-
-            var sString = string.Format("{0}-{1:00}-{2:00}_{3:00}-{4:00}-{5:00}-{6:00}-{7:00}-{8:00}-{9:00}-{10:00}", lol.inertia, lol.erosionRadius, lol.sediment_amount_capicty, lol.sediment_amount_capicty_min, lol.disolve_rate, lol.deposit, lol.evaportion_rate, lol.gravity, lol.max_DropletLife, lol.rain_rate, lol.inital_speed, lol.erodeSpeed);
+            //Debug.Log(Amplitude);
+            var stampString = string.Format("Noises_{0}-{1:00}-{2:00}-", Perlin_Noise, value_noise, Simplex_noise);
+            string sString;
+            string ErodeeS = "";
+            if (erosion == true)
+            {
+                ErodeeS = "Erosion/";
+                sString = string.Format("{0}-{1:00}-{2:00}_{3:00}-{4:00}-{5:00}-{6:00}-{7:00}-{8:00}-{9:00}-{10:00}-{11:00}-{12:00}", erosion, Rain_iterations, lol.inertia, lol.erosionRadius, lol.sediment_amount_capicty, lol.sediment_amount_capicty_min, lol.disolve_rate, lol.deposit, lol.evaportion_rate, lol.gravity, lol.max_DropletLife, lol.rain_rate, lol.inital_speed, lol.erodeSpeed);
+            }
+            else
+                sString = string.Format("{0}", erosion);
 
             switch (type)
             {
 
                 case 1:
-                    ScreenCapture.CaptureScreenshot("ScreenShots/Perlin/" + stampString + "Erosion" +sString + ".png");
+                    ScreenCapture.CaptureScreenshot("ScreenShots/Perlin/"+ ErodeeS + stampString + Amplitude + "-" +  Frequency + "- Erosion -" +sString + ".png");
                     break;
                 case 2:
-                    ScreenCapture.CaptureScreenshot("ScreenShots/Value/" + stampString + "Erosion" + sString + ".png");
+                    ScreenCapture.CaptureScreenshot("ScreenShots/Value/" + ErodeeS + stampString + Amplitude + "-" + Frequency +"- Erosion -" + sString + ".png");
                     break;
                 case 3:
-                    ScreenCapture.CaptureScreenshot("ScreenShots/Simplex/" + stampString + "Erosion" + sString + ".png");
+                    ScreenCapture.CaptureScreenshot("ScreenShots/Simplex/"+ ErodeeS + stampString + Amplitude + "-" + Frequency +  "- Erosion -" + sString + ".png");
                     break;
                 default:
                     Debug.Log("taset");
                     break;
             }
+
+            
+            
 
         }
     }
@@ -442,21 +453,21 @@ public class Map_Generation : MonoBehaviour
 
         System.Random Ran_Seed = new System.Random();
 
-        int xd = Ran_Seed.Next(1, 2);
+        int xd = Ran_Seed.Next(1, 3);
 
         if (xd == 1)
             Perlin_Noise = true;
         else
             Perlin_Noise = false;
 
-        xd = Ran_Seed.Next(3, 4);
+        xd = Ran_Seed.Next(3, 5);
 
         if (xd == 3)
             value_noise = true;
         else
             value_noise = false;
 
-        xd = Ran_Seed.Next(4, 5);
+        xd = Ran_Seed.Next(4, 6);
 
         if (xd == 4)
             Simplex_noise = true;

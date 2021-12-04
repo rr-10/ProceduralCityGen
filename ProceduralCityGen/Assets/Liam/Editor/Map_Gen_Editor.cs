@@ -33,6 +33,16 @@ public class Map_Gen_Editor : Editor
             
             
         }
+        if (GUILayout.Button(" Random_amount_200"))
+        {
+
+            for (int y = 0; y < 200; y++)
+            {
+                Map_Gen.randomgen();
+            }
+
+
+        }
         //test
     }
 }
