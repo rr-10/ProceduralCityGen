@@ -18,17 +18,28 @@ public class Map_Generation : MonoBehaviour
     public int randomsA = 100;
 
     //Type of map to draw
-    public enum Draw_Mode { NoiseMap, ColourMap, Mesh };
+    public enum Draw_Mode
+    {
+        NoiseMap,
+        ColourMap,
+        Mesh
+    };
+
     public Draw_Mode DrawMap;
+
     //type of noise to use as the base noise map
-    public enum Noise_Type { Perlin, Value, simplex }
+    public enum Noise_Type
+    {
+        Perlin,
+        Value,
+        simplex
+    }
+
     public Noise_Type Base_NoiseType;
 
     //Settings that affect overall outcome of terrain
-    [Space(25)]
-    public int Octaves;
-    [Range(0, 1)]
-    public float Amplitude; 
+    [Space(25)] public int Octaves;
+    [Range(0, 1)] public float Amplitude;
     public float Frequency;
     public int Seed;
     public Vector2 OffSet; //move around map
@@ -39,6 +50,7 @@ public class Map_Generation : MonoBehaviour
     [Space(25)]
     //enable showing bulding location and spawning them
     public bool Buildings;
+
     public bool BuildingsPrefabs;
     public bool Tree_prefabs;
     public bool erosion = false;
@@ -54,8 +66,8 @@ public class Map_Generation : MonoBehaviour
 
     //Used in editor to create the colours of the map
     public Terrain[] Biomes;
-    [System.Serializable]
 
+    [System.Serializable]
     public struct Terrain //Struct for sorting colours on map
     {
         public string name;
@@ -64,11 +76,8 @@ public class Map_Generation : MonoBehaviour
     }
 
 
-
-
     public void Generate_Map()
     {
-
         //Set base type of map
         int type = 1;
         if (Base_NoiseType == Noise_Type.Value)
@@ -77,7 +86,8 @@ public class Map_Generation : MonoBehaviour
             type = 3;
 
         //Generate a noise map
-        Map_Noise = Noise_Maps.GenNoiseMap(Width, Height, Seed, Scale_Noise, Octaves, Amplitude, Frequency, OffSet, Perlin_Noise, value_noise, Simplex_noise, type);
+        Map_Noise = Noise_Maps.GenNoiseMap(Width, Height, Seed, Scale_Noise, Octaves, Amplitude, Frequency, OffSet,
+            Perlin_Noise, value_noise, Simplex_noise, type);
 
         //colouring the map
         Map_Colour = new Color[Width * Height];
@@ -95,7 +105,6 @@ public class Map_Generation : MonoBehaviour
             }
             else
                 erosion = false;
-
         }
 
         if (erosion == true)
@@ -113,7 +122,6 @@ public class Map_Generation : MonoBehaviour
         Building_Generator Buildings_gen = FindObjectOfType<Building_Generator>();
         Vegation veg = FindObjectOfType<Vegation>();
 
-        
 
         //Just noise map
         if (DrawMap == Draw_Mode.NoiseMap)
@@ -121,25 +129,22 @@ public class Map_Generation : MonoBehaviour
             Display.Drawtextures(Textures.textureHeightMap(Map_Noise));
         }
 
-
         //just colour map
         else if (DrawMap == Draw_Mode.ColourMap)
             Display.Drawtextures(Textures.TextureFromMap(Map_Colour, Width, Height));
 
-
-
         //Mesh with possible buildings and vegation
         else if (DrawMap == Draw_Mode.Mesh)
         {
-            
             //Display script activates creation of mesh
-            Display.DrawMesh(MapMeshGenertion.GenerateMeshTerrain(Map_Noise, MeshHeight, MeshHeightCurve), Textures.TextureFromMap(Map_Colour, Width, Height));
+            Display.DrawMesh(MapMeshGenertion.GenerateMeshTerrain(Map_Noise, MeshHeight, MeshHeightCurve),
+                Textures.TextureFromMap(Map_Colour, Width, Height));
 
 
             if (BuildingsPrefabs == true)
             {
                 Buildings_gen.ClearBuildings();
-                Buildings_gen.GenerateBuildings(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight); 
+                Buildings_gen.GenerateBuildings(Width, Height, Map_Noise, bulidingMap, MeshHeightCurve, MeshHeight);
             }
             else
                 Buildings_gen.ClearBuildings();
@@ -151,12 +156,11 @@ public class Map_Generation : MonoBehaviour
                 veg.GenerateVegation();
             }
             //else
-               // veg.ClearVegation();
-           
+            // veg.ClearVegation();
         }
 
-        
-        if (screnshot == true )
+
+        if (screnshot == true)
         {
             Erosion lol = FindObjectOfType<Erosion>();
 
@@ -169,31 +173,33 @@ public class Map_Generation : MonoBehaviour
             if (erosion == true)
             {
                 ErodeeS = "Erosion/";
-                sString = string.Format("{0}-{1:00}-{2:00}_{3:00}-{4:00}-{5:00}-{6:00}-{7:00}-{8:00}-{9:00}-{10:00}-{11:00}-{12:00}", erosion, Rain_iterations, lol.inertia, lol.erosionRadius, lol.sediment_amount_capicty, lol.sediment_amount_capicty_min, lol.disolve_rate, lol.deposit, lol.evaportion_rate, lol.gravity, lol.max_DropletLife, lol.rain_rate, lol.inital_speed, lol.erodeSpeed);
+                sString = string.Format(
+                    "{0}-{1:00}-{2:00}_{3:00}-{4:00}-{5:00}-{6:00}-{7:00}-{8:00}-{9:00}-{10:00}-{11:00}-{12:00}",
+                    erosion, Rain_iterations, lol.inertia, lol.erosionRadius, lol.sediment_amount_capicty,
+                    lol.sediment_amount_capicty_min, lol.disolve_rate, lol.deposit, lol.evaportion_rate, lol.gravity,
+                    lol.max_DropletLife, lol.rain_rate, lol.inital_speed, lol.erodeSpeed);
             }
             else
                 sString = string.Format("{0}", erosion);
 
             switch (type)
             {
-
                 case 1:
-                    ScreenCapture.CaptureScreenshot("ScreenShots/Perlin/"+ ErodeeS + stampString + Amplitude + "-" +  Frequency + "- Erosion -" +sString + ".png");
+                    ScreenCapture.CaptureScreenshot("ScreenShots/Perlin/" + ErodeeS + stampString + Amplitude + "-" +
+                                                    Frequency + "- Erosion -" + sString + ".png");
                     break;
                 case 2:
-                    ScreenCapture.CaptureScreenshot("ScreenShots/Value/" + ErodeeS + stampString + Amplitude + "-" + Frequency +"- Erosion -" + sString + ".png");
+                    ScreenCapture.CaptureScreenshot("ScreenShots/Value/" + ErodeeS + stampString + Amplitude + "-" +
+                                                    Frequency + "- Erosion -" + sString + ".png");
                     break;
                 case 3:
-                    ScreenCapture.CaptureScreenshot("ScreenShots/Simplex/"+ ErodeeS + stampString + Amplitude + "-" + Frequency +  "- Erosion -" + sString + ".png");
+                    ScreenCapture.CaptureScreenshot("ScreenShots/Simplex/" + ErodeeS + stampString + Amplitude + "-" +
+                                                    Frequency + "- Erosion -" + sString + ".png");
                     break;
                 default:
                     Debug.Log("taset");
                     break;
             }
-
-            
-            
-
         }
     }
 
@@ -222,7 +228,6 @@ public class Map_Generation : MonoBehaviour
 
         if (Height != Width)
             Height = Width;
-
     }
 
     void erode()
@@ -236,28 +241,25 @@ public class Map_Generation : MonoBehaviour
                 heightmap[y * Width + x] = Map_Noise[x, y];
             }
         }
-        
+
         Erosion lol = FindObjectOfType<Erosion>();
-        
+
         if (random == true)
         {
-            
             System.Random Ran_Seed = new System.Random();
-            
-            lol.inertia = (float)Ran_Seed.Next(0, 100) / 100;
+
+            lol.inertia = (float) Ran_Seed.Next(0, 100) / 100;
             lol.erosionRadius = (Ran_Seed).Next(3, 15);
-            lol.sediment_amount_capicty = (float)(Ran_Seed).Next(1, 140) / 100;
-            lol.sediment_amount_capicty_min = (float)(Ran_Seed).Next(0, 30) / 10;
-            lol.disolve_rate = (float)(Ran_Seed).Next(0,100) / 100;
-            lol.deposit = (float)(Ran_Seed).Next(0,30) / 10;
-            lol.evaportion_rate = (float)(Ran_Seed).Next(0, 30) / 10;
+            lol.sediment_amount_capicty = (float) (Ran_Seed).Next(1, 140) / 100;
+            lol.sediment_amount_capicty_min = (float) (Ran_Seed).Next(0, 30) / 10;
+            lol.disolve_rate = (float) (Ran_Seed).Next(0, 100) / 100;
+            lol.deposit = (float) (Ran_Seed).Next(0, 30) / 10;
+            lol.evaportion_rate = (float) (Ran_Seed).Next(0, 30) / 10;
             lol.gravity = (Ran_Seed).Next(1, 50);
-            lol.max_DropletLife = (float)(Ran_Seed).Next(10, 50);
+            lol.max_DropletLife = (float) (Ran_Seed).Next(10, 50);
             lol.rain_rate = (Ran_Seed).Next(1, 10);
             lol.inital_speed = (Ran_Seed).Next(1, 10);
-            lol.erodeSpeed = (float)(Ran_Seed).Next(1, 100) / 100;
-            
-
+            lol.erodeSpeed = (float) (Ran_Seed).Next(1, 100) / 100;
         }
 
 
@@ -271,7 +273,6 @@ public class Map_Generation : MonoBehaviour
             }
         }
     }
-
 
 
     void ColourMap()
@@ -292,7 +293,6 @@ public class Map_Generation : MonoBehaviour
                         break;
                     }
                 }
-
             }
         }
     }
@@ -312,8 +312,6 @@ public class Map_Generation : MonoBehaviour
 
                     if (CurrentHeight > Biomes[2].height && CurrentHeight < Biomes[5].height) //add max height
                     {
-
-
                         for (int i = 3; i > 0; i--)
                         {
                             if (bulidingMap[y * Width + x] == 0)
@@ -326,19 +324,23 @@ public class Map_Generation : MonoBehaviour
                                 //Check if a the verticies can hold  large building
                                 if (i > 2)
                                 {
-                                    if (Check > -FlatLand && Check < FlatLand && check2 > -FlatLand && check2 < FlatLand && Check3 > -FlatLand && Check3 < FlatLand)
+                                    if (Check > -FlatLand && Check < FlatLand && check2 > -FlatLand &&
+                                        check2 < FlatLand && Check3 > -FlatLand && Check3 < FlatLand)
                                     {
-
-
                                         //Checking centre verticies to see if flat with out verticies
                                         float checkCenterLT = CurrentHeight - Map_Noise[x + i - 2, y + i - 1];
                                         float checkCenterLB = CurrentHeight - Map_Noise[x + i - 2, y + i - 2];
                                         float checkCenterRT = CurrentHeight - Map_Noise[x + i - 1, y + i - 1];
                                         float checkCenterRB = CurrentHeight - Map_Noise[x + i - 1, y + i - 2];
 
-                                        if (checkCenterLT > -FlatLand && Check < checkCenterLT && checkCenterLB > -FlatLand && checkCenterLB < FlatLand && checkCenterRT > -FlatLand && checkCenterRT < FlatLand && checkCenterRB > -FlatLand && checkCenterRB < FlatLand)
+                                        if (checkCenterLT > -FlatLand && Check < checkCenterLT &&
+                                            checkCenterLB > -FlatLand && checkCenterLB < FlatLand &&
+                                            checkCenterRT > -FlatLand && checkCenterRT < FlatLand &&
+                                            checkCenterRB > -FlatLand && checkCenterRB < FlatLand)
                                         {
-                                            if (bulidingMap[(y + i) * Width + x] == 0 && bulidingMap[(y + i) * Width + x + i] == 0 && bulidingMap[y * Width + x + i] == 0)
+                                            if (bulidingMap[(y + i) * Width + x] == 0 &&
+                                                bulidingMap[(y + i) * Width + x + i] == 0 &&
+                                                bulidingMap[y * Width + x + i] == 0)
                                             {
                                                 //loop through the verticies and set the colour to black
                                                 for (int j = 0; j < 3; j++)
@@ -346,7 +348,6 @@ public class Map_Generation : MonoBehaviour
                                                     Map_Colour[(y + j) * Width + x] = Color.black;
                                                     Map_Colour[(y + j) * Width + x + 1] = Color.black;
                                                     Map_Colour[(y + j) * Width + x + 2] = Color.black;
-
                                                 }
 
                                                 //loop trhough all the height points and set them to occupied by a building
@@ -362,26 +363,21 @@ public class Map_Generation : MonoBehaviour
                                                     Map_Noise[x + 1, y + j] = Map_Noise[x, y];
                                                     Map_Noise[x + 2, y + j] = Map_Noise[x, y];
                                                     Map_Noise[x + 3, y + j] = Map_Noise[x, y];
-
                                                 }
 
 
                                                 //Designate building type 4 == large
                                                 bulidingMap[y * Width + x] = 4;
                                             }
-
                                         }
-
                                     }
-
-
                                 }
 
                                 else
                                 {
-
                                     //SMALL and Medium buildings
-                                    if (Check > -FlatLand && Check < FlatLand && check2 > -FlatLand && check2 < FlatLand && Check3 > -FlatLand && Check3 < FlatLand)
+                                    if (Check > -FlatLand && Check < FlatLand && check2 > -FlatLand &&
+                                        check2 < FlatLand && Check3 > -FlatLand && Check3 < FlatLand)
                                     {
                                         //if area for small buildind
                                         if (i == 1)
@@ -397,14 +393,14 @@ public class Map_Generation : MonoBehaviour
                                             Map_Noise[x, y + 1] = Map_Noise[x, y];
                                         }
 
-
                                         //if area for medium building
                                         else
                                         {
-
-                                            if (bulidingMap[(y + i) * Width + x] == 0 && bulidingMap[(y + i) * Width + x + i] == 0 && bulidingMap[y * Width + x + i] == 0 && (CurrentHeight - Map_Noise[x + 1, y + 1]) > -FlatLand)
+                                            if (bulidingMap[(y + i) * Width + x] == 0 &&
+                                                bulidingMap[(y + i) * Width + x + i] == 0 &&
+                                                bulidingMap[y * Width + x + i] == 0 &&
+                                                (CurrentHeight - Map_Noise[x + 1, y + 1]) > -FlatLand)
                                             {
-
                                                 Map_Colour[y * Width + x] = Color.gray;
                                                 Map_Colour[y * Width + x + 1] = Color.red;
                                                 Map_Colour[(y + 1) * Width + x] = Color.red;
@@ -420,27 +416,16 @@ public class Map_Generation : MonoBehaviour
                                                     Map_Noise[x, y + j] = Map_Noise[x, y];
                                                     Map_Noise[x + 1, y + j] = Map_Noise[x, y];
                                                     Map_Noise[x + 2, y + j] = Map_Noise[x, y];
-
-
                                                 }
 
                                                 bulidingMap[y * Width + x] = 3;
-
                                             }
                                         }
                                     }
-
-
                                 }
-
-
                             }
                         }
-
-
                     }
-
-
                 }
             }
         }
@@ -449,8 +434,6 @@ public class Map_Generation : MonoBehaviour
 
     public void randomgen()
     {
-
-
         System.Random Ran_Seed = new System.Random();
 
         int xd = Ran_Seed.Next(1, 3);
@@ -496,11 +479,9 @@ public class Map_Generation : MonoBehaviour
                 break;
         }
 
-        Amplitude = (float)Ran_Seed.Next(15, 80) / 100;
-        Frequency = (float)Ran_Seed.Next(5, 25) / 10;
+        Amplitude = (float) Ran_Seed.Next(15, 80) / 100;
+        Frequency = (float) Ran_Seed.Next(5, 25) / 10;
 
         Generate_Map();
-
-
     }
 }

@@ -26,6 +26,8 @@ public class GenerateBuilding : MonoBehaviour
     [SerializeField] private GameObject FloorPrefab;
     [SerializeField] private GameObject RoofPrefab;
 
+    [SerializeField] private Material[] AvailableMaterials;
+
     //Settings that alter generation
     [SerializeField] private int MaximumFloors = 1;
     [SerializeField] private float setDoorChance;
@@ -40,6 +42,8 @@ public class GenerateBuilding : MonoBehaviour
     private Building building;
     private List<GameObject> spawnedPrefabs = new List<GameObject>();
     private BuildProcess _buildProcessToApply;
+    private int currentMaterialIndex = 0;
+
     public void Generate()
     {
         DoorPercentChance = setDoorChance;
@@ -75,14 +79,14 @@ public class GenerateBuilding : MonoBehaviour
 
     private void CreateBuilding(int baseX = 4, int baseY = 4)
     {
-        //TODO : Choose a colour for each of the buildings here 
+        currentMaterialIndex = Random.Range(0, AvailableMaterials.Length);
 
         //Handle the rules not being set 
         if (!Rule)
         {
             Rule = ScriptableObject.CreateInstance<BasicRules>();
         }
-        Rule.CorrectWeights();
+        // Rule.CorrectWeights();
 
         //TODO : Handle this better
         if (MaximumFloors == 1 || MaximumFloors == 0)
@@ -126,7 +130,7 @@ public class GenerateBuilding : MonoBehaviour
     {
         //Create folder for building
         GameObject buildingFolder = new GameObject($"Building");
-        buildingFolder.transform.position = position;
+
         spawnedPrefabs.Add(buildingFolder);
 
         foreach (Floor floor in building.Floors)
@@ -135,7 +139,7 @@ public class GenerateBuilding : MonoBehaviour
             GameObject floorFolder = new GameObject($"Floor_{floor.FloorLevel}");
             floorFolder.transform.parent = buildingFolder.transform;
             floorFolder.transform.position = buildingFolder.transform.position;
-         
+
             for (int x = 0; x < floor.Rooms.GetLength(0); x++)
             {
                 for (int y = 0; y < floor.Rooms.GetLength(1); y++)
@@ -171,7 +175,7 @@ public class GenerateBuilding : MonoBehaviour
         }
 
         buildingFolder.transform.eulerAngles = rotation;
-
+        buildingFolder.transform.position = position;
     }
 
     private void PlaceFloor(Transform parentTransform, Vector3 position)
@@ -222,34 +226,42 @@ public class GenerateBuilding : MonoBehaviour
                 break;
         }
 
+        GameObject prefabToUse = NormalWallPrefab;
         //Spawn all the walls of the room
         switch (wall.Type)
         {
             case WallType.Normal:
-                SpawnPrefab(NormalWallPrefab, parentTransform, offset,
-                    Quaternion.Euler(0.0f, (float)wall.Side, 0.0f));
+                prefabToUse = NormalWallPrefab;
                 break;
             case WallType.Door:
-                SpawnPrefab(DoorWallPrefab, parentTransform, offset, Quaternion.Euler(0.0f, (float)wall.Side, 0.0f)
-                );
+                prefabToUse = DoorWallPrefab;
                 break;
             case WallType.Window:
-                SpawnPrefab(WindowWallPrefab, parentTransform, offset,
-                    Quaternion.Euler(0.0f, (float)wall.Side, 0.0f));
+                prefabToUse = WindowWallPrefab;
                 break;
             case WallType.Balcony:
-                SpawnPrefab(BalconyWallPrefab, parentTransform, offset,
-                    Quaternion.Euler(0.0f, (float)wall.Side, 0.0f));
+                prefabToUse = BalconyWallPrefab;
                 break;
         }
+
+        SpawnPrefab(prefabToUse, parentTransform, offset,
+            Quaternion.Euler(0.0f, (float) wall.Side, 0.0f), true);
     }
 
-    private void SpawnPrefab(GameObject prefab, Transform parent, Vector3 position, Quaternion rotation)
+    private void SpawnPrefab(GameObject prefab, Transform parent, Vector3 position, Quaternion rotation,
+        bool shouldSetMaterial = false)
     {
         var go = Instantiate(prefab, position, rotation, parent);
 
-        //TODO : Figure out why I have to do this
-        go.transform.parent = parent.transform;
-        go.transform.position = parent.transform.position + position;
+        //Set the material 
+        if (shouldSetMaterial)
+        {
+            //If this gameobject has the set material script then set the correct material 
+            SetBuildingMaterial script = go.GetComponent<SetBuildingMaterial>();
+            if (script)
+            {
+                script.SetWallMaterial(AvailableMaterials[currentMaterialIndex]);
+            }
+        }
     }
 }

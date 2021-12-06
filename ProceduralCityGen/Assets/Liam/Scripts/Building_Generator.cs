@@ -88,6 +88,5 @@ public class Building_Generator : MonoBehaviour
         {
             gen.Clear();
         }
-
     }
 }

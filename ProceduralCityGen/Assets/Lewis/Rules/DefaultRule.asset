@@ -14,21 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fromNoChange:
   - NextRule: 3
-    SelectionChance: 1
+    SelectionChance: 0.916
   - NextRule: 2
-    SelectionChance: 0.249
+    SelectionChance: 0.783
   fromShrinkColumn:
   - NextRule: 4
-    SelectionChance: 0.112
+    SelectionChance: 0.123
   - NextRule: 1
-    SelectionChance: 0.812
+    SelectionChance: 0.749
   fromShrinkRow:
   - NextRule: 1
-    SelectionChance: 0.805
+    SelectionChance: 0.507
   - NextRule: 4
-    SelectionChance: 1
+    SelectionChance: 0
   fromShrinkRandom:
   - NextRule: 2
-    SelectionChance: 0.429
+    SelectionChance: 0.591
   - NextRule: 1
-    SelectionChance: 0.79
+    SelectionChance: 0.867

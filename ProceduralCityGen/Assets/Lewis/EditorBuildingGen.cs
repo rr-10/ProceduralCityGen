@@ -16,6 +16,7 @@ public class EditorBuildingGen : Editor
     private SerializedProperty m_balconyWallPrefab;
     private SerializedProperty m_floorPrefab;
     private SerializedProperty m_roofPrefab;
+    private SerializedProperty m_materials;
 
     //Random Chances and max roof
     private SerializedProperty m_doorPercentChance;
@@ -38,6 +39,7 @@ public class EditorBuildingGen : Editor
         m_balconyWallPrefab = m_object.FindProperty("BalconyWallPrefab");
         m_floorPrefab = m_object.FindProperty("FloorPrefab");
         m_roofPrefab = m_object.FindProperty("RoofPrefab");
+        m_materials = m_object.FindProperty("AvailableMaterials");
 
         m_doorPercentChance = m_object.FindProperty("setDoorChance");
         m_windowPercentChance = m_object.FindProperty("setWindowChance");
@@ -50,8 +52,7 @@ public class EditorBuildingGen : Editor
     public override void OnInspectorGUI()
     {
         EditorGUILayout.PropertyField(m_rule);
-        
-        
+
         EditorGUILayout.Slider(m_doorPercentChance, 0.0f, 1.0f);
         EditorGUILayout.Slider(m_windowPercentChance, 0.0f, 1.0f);
         EditorGUILayout.Slider(m_balconyPercentChance, 0.0f, 1.0f);
@@ -59,7 +60,7 @@ public class EditorBuildingGen : Editor
         EditorGUILayout.PropertyField(m_maximumFloors);
      
         //Building Prefabs
-        showPrefabs = EditorGUILayout.Foldout(showPrefabs, "Building Prefabs");
+        showPrefabs = EditorGUILayout.Foldout(showPrefabs, "Building Components");
       
         if (showPrefabs)
         {
@@ -75,6 +76,8 @@ public class EditorBuildingGen : Editor
             EditorGUILayout.PropertyField(m_roofPrefab);
 
             EditorGUILayout.PropertyField(m_floorPrefab);
+
+            EditorGUILayout.PropertyField(m_materials);
         }        
         
         //Generate Building on button press or settings change
