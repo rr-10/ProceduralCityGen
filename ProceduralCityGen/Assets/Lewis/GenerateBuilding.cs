@@ -26,7 +26,8 @@ public class GenerateBuilding : MonoBehaviour
     [SerializeField] private GameObject FloorPrefab;
     [SerializeField] private GameObject RoofPrefab;
 
-    [SerializeField] private Material[] AvailableMaterials;
+    [SerializeField] private Material[] WallsMaterials;
+    [SerializeField] private Material[] DoorMaterials;
 
     //Settings that alter generation
     [SerializeField] private int MaximumFloors = 1;
@@ -42,7 +43,8 @@ public class GenerateBuilding : MonoBehaviour
     private Building building;
     private List<GameObject> spawnedPrefabs = new List<GameObject>();
     private BuildProcess _buildProcessToApply;
-    private int currentMaterialIndex = 0;
+    private int CurrentWallMaterialIndex = 0;
+    private int CurrentDoorMaterialIndex = 0;
 
     public void Generate()
     {
@@ -74,12 +76,15 @@ public class GenerateBuilding : MonoBehaviour
 
         //Generate a new building and spawn all the required prefabs in the scene 
         CreateBuilding(size, size);
-        Render(position, new Vector3(-45f, 45f, -45f));
+        //Render(position, new Vector3(-45f, 45f, -45f));
+        Render(position);
     }
 
     private void CreateBuilding(int baseX = 4, int baseY = 4)
     {
-        currentMaterialIndex = Random.Range(0, AvailableMaterials.Length);
+        //Randomly pick a material from the collection of materials 
+        CurrentWallMaterialIndex = Random.Range(0, WallsMaterials.Length);
+        CurrentDoorMaterialIndex = Random.Range(0, DoorMaterials.Length);
 
         //Handle the rules not being set 
         if (!Rule)
@@ -258,9 +263,14 @@ public class GenerateBuilding : MonoBehaviour
         {
             //If this gameobject has the set material script then set the correct material 
             SetBuildingMaterial script = go.GetComponent<SetBuildingMaterial>();
-            if (script)
+            if (script && WallsMaterials.Length != 0 && DoorMaterials.Length != 0)
             {
-                script.SetWallMaterial(AvailableMaterials[currentMaterialIndex]);
+                script.SetWallMaterial(WallsMaterials[CurrentWallMaterialIndex]);
+
+                if ((prefab == BalconyWallPrefab) || (prefab == DoorWallPrefab))
+                {
+                    script.SetDoorMaterial(DoorMaterials[CurrentDoorMaterialIndex]);
+                }
             }
         }
     }

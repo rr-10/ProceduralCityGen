@@ -38,9 +38,12 @@ public class Building_Generator : MonoBehaviour
                 RelativePosition.x = (-width * Meshh.transform.localScale.x) / 2 + 5;
                 RelativePosition.z = (height * Meshh.transform.localScale.z) / 2 - 5;
 
+                int buildingSize = 0;
+                
                 //small buildings
                 if (BuldingMap[y * width + x] == 2)
                 {
+                    buildingSize = 3;
                     RelativePosition.x +=
                         x * Meshh.transform.localScale.x + Meshh.transform.localScale.x / 2; //Get location on Map
                     RelativePosition.z -=
@@ -49,7 +52,7 @@ public class Building_Generator : MonoBehaviour
                     RelativePosition.y =
                         HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y; // Calulate height
                     
-                    gen.Generate(RelativePosition, 3);
+                    gen.Generate(RelativePosition + new Vector3(-buildingSize,0,-buildingSize), buildingSize);
                     
                     
                 }
@@ -57,17 +60,19 @@ public class Building_Generator : MonoBehaviour
                 //medium building
                 else if (BuldingMap[y * width + x] == 3)
                 {
+                    buildingSize = 4;
                     RelativePosition.x += x * Meshh.transform.localScale.x + Meshh.transform.localScale.x;
                     RelativePosition.z -= y * Meshh.transform.localScale.z + Meshh.transform.localScale.z;
                     RelativePosition.y =
                         HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y ;
                     
-                    gen.Generate(RelativePosition, 4);
+                    gen.Generate(RelativePosition + new Vector3(-buildingSize,0,-buildingSize), buildingSize);
                 }
 
                 //large building
                 else if (BuldingMap[y * width + x] == 4)
                 {
+                    buildingSize = 6;
                     RelativePosition.x += x * Meshh.transform.localScale.x + Meshh.transform.localScale.x +
                                           Meshh.transform.localScale.x / 2;
                     RelativePosition.z -= y * Meshh.transform.localScale.z + Meshh.transform.localScale.z +
@@ -75,7 +80,7 @@ public class Building_Generator : MonoBehaviour
                     RelativePosition.y =
                         HeightCurve.Evaluate(heightmap[x, y]) * mesh_Height * Meshh.transform.localScale.y;
 
-                    gen.Generate(RelativePosition, 5);
+                    gen.Generate(RelativePosition + new Vector3(-buildingSize,0,-buildingSize), buildingSize);
                 }
             }
         }

@@ -95,4 +95,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 081edbd442d6f484889257fe4d3aaf1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectRenderer: {fileID: 5285645512822381248}
+  WallRenderer: {fileID: 5285645512822381248}
+  DoorRenderer: {fileID: 0}
