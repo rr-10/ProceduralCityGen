@@ -35,7 +35,7 @@ public class GenerateBuilding : MonoBehaviour
     public static float DoorPercentChance = 0.2f;
     [SerializeField] private float setWindowChance;
     public static float WindowPercentChance = 0.4f;
-    [SerializeField] private float setBalconyChance;
+    [SerializeField] public float setBalconyChance;
     public static float BalconyPercentChance = 0.35f;
     [SerializeField] private RuleBase Rule;
 

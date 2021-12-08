@@ -14,14 +14,16 @@ public class GridSpawnBuilding : MonoBehaviour
     void Start()
     {
         gen = GetComponent<GenerateBuilding>();
-        
+
         //Spawn Buildings on Grid
         for (int i = 0; i < gridX; i++)
         {
             for (int j = 0; j < gridY; j++)
             {
-                gen.MaximumFloors = i + 2;
-                gen.Generate(new Vector3(i * Spacing, 0,j * Spacing), Random.Range(3,5));
+                //Inrease the maximum floors and balcony chance as i and j increase
+                gen.setBalconyChance = i * 10;
+                gen.MaximumFloors = (gridY - j) + 2;
+                gen.Generate(new Vector3(i * Spacing, 0, j * Spacing), Random.Range(3, 5));
             }
         }
     }
