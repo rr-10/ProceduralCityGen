@@ -20,6 +20,7 @@ public class GridSpawnBuilding : MonoBehaviour
         {
             for (int j = 0; j < gridY; j++)
             {
+                gen.MaximumFloors = i + 2;
                 gen.Generate(new Vector3(i * Spacing, 0,j * Spacing), Random.Range(3,5));
             }
         }

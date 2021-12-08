@@ -30,7 +30,7 @@ public class GenerateBuilding : MonoBehaviour
     [SerializeField] private Material[] DoorMaterials;
 
     //Settings that alter generation
-    [SerializeField] private int MaximumFloors = 1;
+    [SerializeField] public int MaximumFloors = 1;
     [SerializeField] private float setDoorChance;
     public static float DoorPercentChance = 0.2f;
     [SerializeField] private float setWindowChance;
@@ -76,8 +76,8 @@ public class GenerateBuilding : MonoBehaviour
 
         //Generate a new building and spawn all the required prefabs in the scene 
         CreateBuilding(size, size);
-        //Render(position, new Vector3(-45f, 45f, -45f));
-        Render(position);
+        Render(position, new Vector3(-45f, 45f, -45f));
+        //Render(position);
     }
 
     private void CreateBuilding(int baseX = 4, int baseY = 4)
@@ -96,7 +96,7 @@ public class GenerateBuilding : MonoBehaviour
         //TODO : Handle this better
         if (MaximumFloors == 1 || MaximumFloors == 0)
         {
-            return;
+            _buildProcessToApply = BuildProcess.ApplyRoof;
         }
 
         //TODO : This should be determined by the rule that is created by the user 

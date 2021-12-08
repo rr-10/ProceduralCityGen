@@ -232,7 +232,6 @@ public class Floor
         return (RoomsWithNoRoof > 0);
     }
 
-    //TODO : We can determine and pass in wether a set of walls can have a balcony from here and replace the floor level with a flog for canHaveBalconies
     public void GenerateWalls()
     {
         //Determine which rooms have exterior walls and where those walls are, creating those walls when found

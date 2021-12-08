@@ -10,7 +10,6 @@ public class SetBuildingMaterial : MonoBehaviour
 
     [SerializeField] private Renderer FloorRenderer;
     
-    //TODO : Can have more functions for the balcony and doors for more variation to colouring 
     public void SetWallMaterial(Material materialToUse)
     {
         WallRenderer.material = materialToUse;
