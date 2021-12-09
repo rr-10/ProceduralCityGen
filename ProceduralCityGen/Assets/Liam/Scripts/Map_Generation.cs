@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Map_Generation : MonoBehaviour
 {
+    public static Map_Generation mapGen;
+
     //Values for map generation
     public int Width;
     public int Height;
@@ -75,6 +77,13 @@ public class Map_Generation : MonoBehaviour
         public Color colour;
     }
 
+    public void Awake()
+    {
+        if (mapGen != null)
+            Destroy(mapGen);
+        else
+            mapGen = this;
+    }
 
     public void Generate_Map()
     {
