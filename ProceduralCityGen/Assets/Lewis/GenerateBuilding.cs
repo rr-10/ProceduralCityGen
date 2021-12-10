@@ -33,7 +33,7 @@ public class GenerateBuilding : MonoBehaviour
     [SerializeField] public int MaximumFloors = 1;
     [SerializeField] private float setDoorChance;
     public static float DoorPercentChance = 0.2f;
-    [SerializeField] private float setWindowChance;
+    [SerializeField] public float setWindowChance;
     public static float WindowPercentChance = 0.4f;
     [SerializeField] public float setBalconyChance;
     public static float BalconyPercentChance = 0.35f;
@@ -64,7 +64,7 @@ public class GenerateBuilding : MonoBehaviour
 
 
     //This is the function that will be called from BuildingGenerator to spawn the building on the terrain 
-    public void Generate(Vector3 position, int size)
+    public void Generate(Vector3 position, int size, Vector3 rotation = default)
     {
         //Turn this function back on to generate buildings
         //return;s        
@@ -76,8 +76,7 @@ public class GenerateBuilding : MonoBehaviour
 
         //Generate a new building and spawn all the required prefabs in the scene 
         CreateBuilding(size, size);
-        Render(position, new Vector3(-45f, 45f, -45f));
-        //Render(position);
+        Render(position, rotation);
     }
 
     private void CreateBuilding(int baseX = 4, int baseY = 4)

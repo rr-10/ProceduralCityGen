@@ -21,9 +21,9 @@ public class GridSpawnBuilding : MonoBehaviour
             for (int j = 0; j < gridY; j++)
             {
                 //Inrease the maximum floors and balcony chance as i and j increase
-                gen.setBalconyChance = i * 10;
+                gen.setBalconyChance = i * 0.1f;
                 gen.MaximumFloors = (gridY - j) + 2;
-                gen.Generate(new Vector3(i * Spacing, 0, j * Spacing), Random.Range(3, 5));
+                gen.Generate(new Vector3(i * Spacing, 0, j * Spacing), Random.Range(3, 5), new Vector3(-45f, 45f, -45f));
             }
         }
     }
