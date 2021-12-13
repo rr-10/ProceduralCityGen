@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.ae.blendity": {
-      "version": "file:../Blendity (Modified).tar.gz",
+      "version": "file:../BlendityModified.tar.gz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}

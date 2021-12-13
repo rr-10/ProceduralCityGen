@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.ae.blendity": "file:../Blendity (Modified).tar.gz",
+    "com.ae.blendity": "file:../BlendityModified.tar.gz",
     "com.unity.collab-proxy": "1.5.7",
     "com.unity.ide.rider": "3.0.7",
     "com.unity.ide.visualstudio": "2.0.9",
