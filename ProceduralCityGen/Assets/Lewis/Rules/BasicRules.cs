@@ -15,6 +15,7 @@ public struct ruleWithWeight
 [CreateAssetMenu(menuName = "Rules")]
 public class BasicRules : RuleBase
 {
+    [SerializeField] private BuildProcess firstRule = BuildProcess.NoChange;
     [SerializeField] private ruleWithWeight[] fromNoChange;
     [SerializeField] private ruleWithWeight[] fromShrinkColumn;
     [SerializeField] private ruleWithWeight[] fromShrinkRow;
@@ -45,7 +46,12 @@ public class BasicRules : RuleBase
         }
 
         return toReturn;
-    }    
+    }
+
+    public override BuildProcess GetFirstProcess()
+    {
+        return firstRule;
+    }
 
     //Correct the weights of each chance by dividing by the number of choices 
     public override void CorrectWeights()

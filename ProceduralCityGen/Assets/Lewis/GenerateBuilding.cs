@@ -92,17 +92,18 @@ public class GenerateBuilding : MonoBehaviour
         }
         // Rule.CorrectWeights();
 
-        //TODO : Handle this better
+        _buildProcessToApply = Rule.GetFirstProcess();
+        
+        //This could be handled better
         if (MaximumFloors == 1 || MaximumFloors == 0)
         {
+            Debug.Log($"Maximum Floors: {MaximumFloors}");
             _buildProcessToApply = BuildProcess.ApplyRoof;
         }
 
-        //TODO : This should be determined by the rule that is created by the user 
-        _buildProcessToApply = BuildProcess.NoChange;
         //Determine initial symbol 
         building = new Building(baseX, baseY);
-
+        
         while (building.AddFloor(_buildProcessToApply))
         {
             //If the next floor is going to be the max number of floors, we have to force the next floor to be roofed

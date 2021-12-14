@@ -63,15 +63,9 @@ public class Floor
 
     private void ShrinkRandom(Floor previous)
     {
-        //Randomly select a direction to shrink in 
-        bool shrinkDirecion = false;
-        if (UnityEngine.Random.Range(0.0f, 1.0f) <= 0.5f)
-        {
-            shrinkDirecion = !shrinkDirecion;
-        }
+        //This function was originally meant to choose random rooms to remove around the edge but didnt look very good when implemented in that way
         
-        //TODO : This is temporary. Have this function done properly 
-        if (shrinkDirecion)
+        if (UnityEngine.Random.Range(0.0f, 1.0f) <= 0.5f)
         {
             ShrinkRow(previous);
         }
@@ -80,8 +74,6 @@ public class Floor
             ShrinkColumn(previous);
         }
         
-        //Decide how much to shrink 
-        //Apply Shrink
     }
     private void ShrinkRow(Floor previous)
     {
@@ -209,8 +201,7 @@ public class Floor
             }
         }
     }
-
-    //TODO : Select a roof to use 
+    
     public void ApplyRoofToAll()
     {
         for (int x = 0; x < Rooms.GetLength(0); x++)
