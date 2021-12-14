@@ -5,42 +5,27 @@ using UnityEditor;
 using System.IO;
 
 /// <summary>
-/// 1. Replace the Blendity tgz file with your files
-/// 2. On Start, get path of resources
-/// 3. 
+/// Title: ImportFiles
+/// Author: Remo Reji Thomas
+/// Date: 28/11/2021
+/// 
+/// This function is called as soon as trees are created
+/// There was a known issue with Blendity as that the filepaths
+/// for generating the foliage was local and that it would not generate
+/// if the project was in a different computer. I found a way to get 
+/// the name of the tree(s) generated and the directory so that
+/// the trees when created would use the correct path (MoveFiles)
+/// to generate which is Resources
 /// </summary>
-
-//[InitializeOnLoad]
-//public class ImportFiles : MonoBehaviour
-//{
-//    public static string SaplingPath;
-
-//    static ImportFiles()
-//    {
-//        EditorApplication.update += RunOnce;
-//    }
-
-//    static void RunOnce()
-//    {
-//        Debug.Log("RunOnce!");
-//        EditorApplication.update -= RunOnce;
-//    }
-
-
-//}
-
 [InitializeOnLoad]
 static class ImportFiles
 {
-    //public static ImportFiles startUp;
     public static string PackagePath;
     public static string ResourcesPath;
 
     static ImportFiles()
     {
         EditorApplication.update += Update;
-        //string folderPath = $@"\BasilBush";
-        //print(PackagePath + folderPath);
     }
 
     static void Update()
@@ -69,65 +54,6 @@ static class ImportFiles
         EditorApplication.update -= Update;
     }
 
-
-    //Works with normal class
-    //private void Start()
-    //{
-    //    //if (!EditorApplication.isPlayingOrWillChangePlaymode)
-    //    //{
-    //    //    PackagePath = Path.GetFullPath("Packages");
-    //    //    print(PackagePath);
-    //    //    //string folderPath = $@"\BasilBush";
-    //    //    //print(PackagePath + folderPath);
-    //    //    FindBlendityPackage();
-    //    //}
-
-    //}
-
-    /*private void FindSaplingPath()
-    {
-        string folderSearch = "com.ae.blendity";
-
-        DirectoryInfo hdDirectoryInWhichToSearch = new DirectoryInfo(@"Library\PackageCache");
-        FileInfo[] filesInDir = hdDirectoryInWhichToSearch.GetFiles("*" + folderSearch + "*.*");
-        DirectoryInfo[] dirsInDir = hdDirectoryInWhichToSearch.GetDirectories("*" + folderSearch + "*.*");
-        foreach (FileInfo foundFile in filesInDir)
-        {
-            string fullName = foundFile.FullName;
-            print("File full name: " + fullName);
-        }
-
-        foreach (DirectoryInfo foundDir in dirsInDir)
-        {
-            string fullName = foundDir.FullName;
-            print("Directiory fyll name: " + fullName);
-            fullName = PackagePath;
-        }
-    }*/
-
 }
-//public static class FindBlendityPackage
-//{
-    
-//    static FindBlendityPackage()
-//    {
-//        string folderSearch = "com.ae.blendity";
 
-//        DirectoryInfo hdDirectoryInWhichToSearch = new DirectoryInfo(@"Library\PackageCache");
-//        FileInfo[] filesInDir = hdDirectoryInWhichToSearch.GetFiles("*" + folderSearch + "*.*");
-//        DirectoryInfo[] dirsInDir = hdDirectoryInWhichToSearch.GetDirectories("*" + folderSearch + "*.*");
-//        foreach (FileInfo foundFile in filesInDir)
-//        {
-//            string fullName = foundFile.FullName;
-//            Debug.Log("File full name: " + fullName);
-//        }
-
-//        foreach (DirectoryInfo foundDir in dirsInDir)
-//        {
-//            string fullName = foundDir.FullName;
-//            Debug.Log("Directiory fyll name: " + fullName);
-//            fullName = PackagePath;
-//        }
-//    }
-//}
 

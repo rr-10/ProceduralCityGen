@@ -5,9 +5,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Create grids, then load up the trees
+/// Title: TreeBushGen
+/// Author: Remo Reji Thomas
+/// Date: 28/11/2021
 /// 
-/// 
+/// This class is asssigned to a prefab, which is spawned
+/// n (number of grids) times by FoliageGridGen. This class'
+/// responsiblity is to get a name of the biome (e.g. Mountain),
+/// get specific models (Sicilian Fir) from the named folder in
+/// resources, assign materials, rotation and spawn them in within
+/// the prefab. Get's its grid x and z values from FoliageGridGen
 /// </summary>
 public class TreeBushGen : MonoBehaviour
 {
@@ -107,7 +114,7 @@ public class TreeBushGen : MonoBehaviour
             int rand = Random.Range(0, 8);
             string index = terrainBiomes[rand].ToString();
 
-            switch(index) //terrainBiomes[index]
+            switch (index) //terrainBiomes[index]
             {
                 case "Deep_Water":
                     {
@@ -159,7 +166,7 @@ public class TreeBushGen : MonoBehaviour
             }
         }
 
-        else 
+        else
         {
             int rand = Random.Range(0, 8);
             string terr = Map_Generation.mapGen.Biomes[rand].name;
@@ -215,7 +222,7 @@ public class TreeBushGen : MonoBehaviour
                     }
                     break;
             }
-        }  
+        }
     }
 
     /// <summary>
@@ -365,7 +372,7 @@ public class TreeBushGen : MonoBehaviour
                 break;
 
             case "Palm Tree":
-                {                 
+                {
                     tree.GetComponent<Renderer>().material = branchMaterials[1];
                     branchMat.GetComponent<Renderer>().material = leafMaterials[1];
                 }

@@ -1,3 +1,20 @@
+/// <summary>
+///-----------------------------------------------------------------------
+///
+///     Title: Blendity/CommandOutput(OutputCmd), Core (App), Utils (ImportManager), 
+///     KeyValueConfig (EditorWindowParameters), ParamsModel(WindowManager),
+///     TreeGen (TreeGenEditor)
+///     Author: Anas Einea (AETuts_
+///     Date: 28/11/2021
+///     Source Code to Blendity in Unity and TreeGen code
+///     Available at: https://github.com/anaseinea/Blendity
+/// 
+///     This class combines all relevant classes for foliage generation and 
+///     is modified to generate the desired results
+///-----------------------------------------------------------------------
+/// </summary>
+
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,11 +27,6 @@ using System.Linq;
 using System.IO;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
-
-/// This is the editor code for the interface
-/// for creating trees.
-/// Code is copyright of Anas Einea (AETuts)
-/// who created Blendity
 
 
 public class OutputCmd
@@ -135,9 +147,11 @@ public class App : Editor
         List<OutputCmd> outputCmd = new List<OutputCmd>();
         List<Task<OutputCmd>> tasks = new List<Task<OutputCmd>>();
         //string path = ImportManager.GetNameOfFile();
-        string path = $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources";
-        path = ImportManager.GetWindowsPath(path);
-        createPath = path;
+        //string path = $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources";
+        string path = Path.GetFullPath("Assets/Resources");
+        //path = ImportManager.GetWindowsPath(path);
+        //createPath = path;
+        //Debug.Log("RUNCMD RESOURCES: " + path);
 
         if (nameOfApp == null)
         {
@@ -160,7 +174,8 @@ public class ImportManager : Editor
     static readonly string[] acceptedExt = new string[] { ".fbx", ".obj", ".x3d", "gltf" };
     static readonly Func<string, bool> IsValidExtension = fileName => acceptedExt.Any((extension) => fileName.EndsWith(extension));
     public static string GetPathOfPackage() => Path.GetFullPath("Packages/com.ae.blendity");
-    public static string GetNameOfFile() => $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources";
+    //public static string GetNameOfFile() => $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources";
+    public static string GetNameOfFile() => Path.GetFullPath("Assets/Resources");
     private static string[] GetNamesOfSelectedFiles() => Array.ConvertAll(Selection.objects, obj => Path.GetFullPath(AssetDatabase.GetAssetPath(obj.GetInstanceID())));
     public static bool IsValidImports()
     {
@@ -401,15 +416,13 @@ public class TreeGenEditor : EditorWindow
 
     public static PresetValues presetValues;
 
-    [MenuItem("Assets/Blendity/Generate/Trees 2", true)]
     public static bool GenerateTreeValid()
     {
-        //string activeName = ImportManager.GetNameOfFile();
-        activePath = $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources";
+        activePath = Path.GetFullPath("Assets/Resources");
+        //activePath = $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources";
         return !activePath.EndsWith("Assets") && Directory.Exists(activePath);
     }
 
-    [MenuItem("Assets/Blendity/Generate/Trees 2")]
     public static void GenerateTree()
     {
         string presetsPath = $@"{ImportManager.GetPathOfPackage()}\blender~\2.92\scripts\presets\operator\add_curve_sapling\";
@@ -421,24 +434,13 @@ public class TreeGenEditor : EditorWindow
         WindowManager windowManager = ScriptableObject.CreateInstance<WindowManager>();
 
         string[,] defaultVariables = {
-            { "Number of Trees", "1","int:1,20" },
+            { "Number of Trees", "1","int:1,50" },
             { "tree_type", presets[0], $"dropdown:{options}"},
-            { "scale", "1", "float:1,10"},
+            { "scale", "1", "float:1,25"},
             { "levels", "2", "int:1,5"},
-            //{ "bevel", "True", "bool" },
             //{ "lef density", "120", "int:0,300"},
-            { "generate_LODs", "True", "bool" }
+            { "generate_LODs", "False", "bool" }
             };
-
-        //  string[,] defaultVariables = {
-        //  { "Number of Trees", "1","int:1,20" },
-        //  { "tree_type", presets[0], $"dropdown:{options}"},
-        //  { "scale", "1", "int:1,10"},
-        //  { "levels", "2", "int:1,4" },
-        //  { "Leaves", "80", "int:0,240"},
-        //  //{ "Bevel", "True", "bool" },
-        //  { "generate_LODs", "True", "bool" }
-        //};
 
         windowManager.defaultVariables = defaultVariables;
         windowManager.OnStart = (List<EditorWindowParameters> editorParams) =>
@@ -446,10 +448,8 @@ public class TreeGenEditor : EditorWindow
             EditorUtility.DisplayProgressBar("Creating Trees !", "Generating Trees", .1f);
 
             int numOfTrees = int.Parse(editorParams[0].editorValue);
-            //int scaleRatio = int.Parse(editorParams[4].editorValue);
-            
+
             editorParams.RemoveAt(0);
-            //editorParams.RemoveAt(4);
 
             Func<string, int, Dictionary<string, string>> EnvelopeCreator = (string path, int threadSeed) =>
             {
@@ -457,19 +457,6 @@ public class TreeGenEditor : EditorWindow
                 string outputStr = $@"{path}\";
                 Dictionary<string, string> envelopeVars = new Dictionary<string, string>{
                     {"seed",$"{seed}"},
-                    {"output",$"{outputStr}"}
-                    };
-
-                editorParams.ForEach((variable) => envelopeVars.Add(variable.editorKey, variable.editorValue));
-                return envelopeVars;
-            };
-
-            Func<string, int, Dictionary<string, string>> ScaleEnvelopeCreator = (string path, int threadScale) =>
-            {
-                int scale = (int)Stopwatch.GetTimestamp() + threadScale;
-                string outputStr = $@"{path}\";
-                Dictionary<string, string> envelopeVars = new Dictionary<string, string>{
-                    {"scale",$"{scale}"},
                     {"output",$"{outputStr}"}
                     };
 
@@ -489,16 +476,6 @@ public class TreeGenEditor : EditorWindow
             float progress = 0.55f;
             int i = 1;
 
-            AssetDatabase.Refresh();
-
-            //string materialDir = processOutputs[0].cmdOutputFile + "materials";
-            //Directory.CreateDirectory(materialDir);
-
-            //string barkMaterial = materialDir + @"\bark material.mat";
-            //ImportManager.CreateMaterial(barkMaterial);
-            //string leavesMaterial = materialDir + @"\leaves material.mat";
-            //ImportManager.CreateMaterial(leavesMaterial);
-
             processOutputs.ForEach((processOutput) =>
             {
                 UnityEngine.Debug.Log(processOutput);
@@ -510,9 +487,6 @@ public class TreeGenEditor : EditorWindow
                 EditorUtility.DisplayProgressBar("Creating Trees!", "Searching for Materials #" + i++, progress);
             });
 
-            //progress += progressPerLoop;
-            //EditorUtility.DisplayProgressBar("Creating Trees !", "Searching for Materials #" + i++, progress);
-
             EditorUtility.ClearProgressBar();
         };
 
@@ -521,223 +495,21 @@ public class TreeGenEditor : EditorWindow
         MoveFiles();
     }
 
-    //public static void MoveFiles()
-    //{
-    //    string rootPath = ImportManager.GetNameOfFile();
-
-    //    if (treePresets[0] == "Olive Tree.py")
-    //    {
-    //        //string rootPath = $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources";
-    //        //string rootPath = ImportManager.GetNameOfFile();
-    //        string folderPath = @"\OliveTrees";
-    //        string newPath = rootPath + folderPath;
-    //        //string destPath = $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources\OliveTrees";
-    //        string filesToDelete = @"Olive Tree*.fbx";
-    //        string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
-
-    //        foreach (string match in matches)
-    //        {
-    //            var matcher = Path.GetFileName(match);
-    //            Debug.Log(matcher);
-
-    //            if (matcher.Contains("Olive Tree"))
-    //            {
-    //                //Debug.Log("Real dal");
-    //                //File.Move($@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources\{ matcher}",
-    //                //$@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources\OliveTrees\{matcher}");
-    //                File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
-    //            }
-    //        }
-    //    }
-
-    //    if (treePresets[1] == "Med Cypress.py")
-    //    {
-    //        //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
-    //        string folderPath = @"\MedCypress";
-    //        string newPath = rootPath + folderPath;
-    //        //string destPath = $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources\MedCypress";
-    //        string filesToDelete = @"Med Cypress*.fbx";
-    //        string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
-
-    //        foreach (string match in matches)
-    //        {
-    //            var matcher = Path.GetFileName(match);
-    //            Debug.Log(matcher);
-
-    //            if (matcher.Contains("Med Cypress"))
-    //            {
-    //                //Debug.Log("Real dal");
-    //                //File.Move($@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources{matcher}",
-    //                //$@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources\MedCypress\{matcher}");
-    //                File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
-    //            }
-    //        }
-    //    }
-
-    //    if (treePresets[2] == "Palm Tree.py")
-    //    {
-    //        //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
-    //        string folderPath = @"\PalmTree";
-    //        string newPath = rootPath + folderPath;
-    //        //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\PalmTree";
-    //        string filesToDelete = @"Palm Tree*.fbx";
-    //        string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
-
-    //        foreach (string match in matches)
-    //        {
-    //            var matcher = Path.GetFileName(match);
-    //            Debug.Log(matcher);
-
-    //            if (matcher.Contains("Palm Tree"))
-    //            {
-    //                //Debug.Log("Real dal");
-    //                //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-    //                //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\PalmTree\{matcher}");
-    //                File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
-    //            }
-    //        }
-    //    }
-
-    //    if (treePresets[3] == "Stone Pine.py")
-    //    {
-    //        //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
-    //        string folderPath = @"\StonePine";
-    //        string newPath = rootPath + folderPath;
-    //        //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\StonePine";
-    //        string filesToDelete = @"Stone Pine*.fbx";
-    //        string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
-
-    //        foreach (string match in matches)
-    //        {
-    //            var matcher = Path.GetFileName(match);
-    //            Debug.Log(matcher);
-
-    //            if (matcher.Contains("Stone Pine"))
-    //            {
-    //                //Debug.Log("Real dal");
-    //                //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-    //                //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\StonePine\{matcher}");
-    //                File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
-    //            }
-    //        }
-    //    }
-
-    //    if (treePresets[4] == "Sicilian Fir.py")
-    //    {
-    //        //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
-    //        //string rootPath = $@"E:\ProceduralCityGen\ProceduralCityGen\ProceduralCityGen\Assets\Resources";
-    //        string folderPath = @"\SicilianFir";
-    //        string newPath = rootPath + folderPath;
-    //        //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\SicilianFir";
-    //        //string destPath = $@"E:\ProceduralCityGen\ProceduralCityGen\ProceduralCityGen\Assets\Resources\SicilianFir";
-    //        string filesToDelete = @"Sicilian Fir*.fbx";
-    //        string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
-
-    //        foreach (string match in matches)
-    //        {
-    //            var matcher = Path.GetFileName(match);
-    //            Debug.Log(matcher);
-
-    //            if (matcher.Contains("Sicilian Fir"))
-    //            {
-    //                //Debug.Log("Real dal");
-    //                //File.Move($@"E:\ProceduralCityGen\ProceduralCityGen\ProceduralCityGen\Assets\Resources\{matcher}",
-    //                //$@"E:\ProceduralCityGen\ProceduralCityGen\ProceduralCityGen\Assets\Resources\SicilianFir\{matcher}");
-    //                //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-    //                //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\SicilianFir\{matcher}");
-    //                File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
-    //            }
-    //        }
-    //    }
-
-    //    if (treePresets[5] == "Basil Bush.py")
-    //    {
-    //        //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
-    //        string folderPath = @"\BasilBush";
-    //        string newPath = rootPath + folderPath;
-    //        //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\BasilBush";
-    //        string filesToDelete = @"Basil Bush*.fbx";
-    //        string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
-
-    //        foreach (string match in matches)
-    //        {
-    //            var matcher = Path.GetFileName(match);
-    //            Debug.Log(matcher);
-
-    //            if (matcher.Contains("Basil Bush"))
-    //            {
-    //                //Debug.Log("Real dal");
-    //                //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-    //                //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\BasilBush\{matcher}");
-    //                File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
-    //            }
-    //        }
-    //    }
-
-    //    if (treePresets[6] == "Juniper Bush.py")
-    //    {
-    //        //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
-    //        string folderPath = @"\JuniperBush";
-    //        string newPath = rootPath + folderPath;
-    //        //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\JuniperBush";
-    //        string filesToDelete = @"Juniper Bush*.fbx";
-    //        string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
-
-    //        foreach (string match in matches)
-    //        {
-    //            var matcher = Path.GetFileName(match);
-    //            Debug.Log(matcher);
-
-    //            if (matcher.Contains("Juniper Bush"))
-    //            {
-    //                //Debug.Log("Real dal");
-    //                //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-    //                //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\JuniperBush\{matcher}");
-    //                File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
-    //            }
-    //        }
-    //    }
-
-    //    if (treePresets[7] == "Myrtle Bush.py")
-    //    {
-    //        //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
-    //        string folderPath = @"\MyrtleBush";
-    //        string newPath = rootPath + folderPath;
-    //        //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\MyrtleBush";
-    //        string filesToDelete = @"Myrtle Bush*.fbx";
-    //        string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
-
-    //        foreach (string match in matches)
-    //        {
-    //            var matcher = Path.GetFileName(match);
-    //            Debug.Log(matcher);
-
-    //            if (matcher.Contains("Myrtle Bush"))
-    //            {
-    //                //Debug.Log("Real dal");
-    //                //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-    //                //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\MyrtleBush\{matcher}");
-    //                File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
-    //            }
-    //        }
-    //    }
-
-    //    AssetDatabase.Refresh();
-
-    //    Debug.Log("Finished assigning");
-    //    treesAssigned = true;
-    //}
-
+    /// <summary>
+    /// This function would get the recently created files from Resources
+    /// and move them to dedicated files. For this to work, it has to follow
+    /// through each preset in order as if there was a chance of making it so
+    /// that anyone can choose to create from the list, it would make the code
+    /// unreachable
+    /// </summary>
     public static void MoveFiles()
     {
         string rootPath = ImportManager.GetNameOfFile();
 
         if (treePresets[0] == "Basil Bush.py")
         {
-            //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
             string folderPath = @"\BasilBush";
             string newPath = rootPath + folderPath;
-            //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\BasilBush";
             string filesToDelete = @"Basil Bush*.fbx";
             string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
 
@@ -748,9 +520,6 @@ public class TreeGenEditor : EditorWindow
 
                 if (matcher.Contains("Basil Bush"))
                 {
-                    //Debug.Log("Real dal");
-                    //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-                    //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\BasilBush\{matcher}");
                     File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
                 }
             }
@@ -758,10 +527,8 @@ public class TreeGenEditor : EditorWindow
 
         if (treePresets[1] == "Juniper Bush.py")
         {
-            //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
             string folderPath = @"\JuniperBush";
             string newPath = rootPath + folderPath;
-            //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\JuniperBush";
             string filesToDelete = @"Juniper Bush*.fbx";
             string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
 
@@ -772,9 +539,6 @@ public class TreeGenEditor : EditorWindow
 
                 if (matcher.Contains("Juniper Bush"))
                 {
-                    //Debug.Log("Real dal");
-                    //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-                    //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\JuniperBush\{matcher}");
                     File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
                 }
             }
@@ -782,10 +546,8 @@ public class TreeGenEditor : EditorWindow
 
         if (treePresets[2] == "Med Cypress.py")
         {
-            //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
             string folderPath = @"\MedCypress";
             string newPath = rootPath + folderPath;
-            //string destPath = $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources\MedCypress";
             string filesToDelete = @"Med Cypress*.fbx";
             string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
 
@@ -796,9 +558,6 @@ public class TreeGenEditor : EditorWindow
 
                 if (matcher.Contains("Med Cypress"))
                 {
-                    //Debug.Log("Real dal");
-                    //File.Move($@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources{matcher}",
-                    //$@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources\MedCypress\{matcher}");
                     File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
                 }
             }
@@ -806,10 +565,8 @@ public class TreeGenEditor : EditorWindow
 
         if (treePresets[3] == "Myrtle Bush.py")
         {
-            //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
             string folderPath = @"\MyrtleBush";
             string newPath = rootPath + folderPath;
-            //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\MyrtleBush";
             string filesToDelete = @"Myrtle Bush*.fbx";
             string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
 
@@ -820,9 +577,6 @@ public class TreeGenEditor : EditorWindow
 
                 if (matcher.Contains("Myrtle Bush"))
                 {
-                    //Debug.Log("Real dal");
-                    //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-                    //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\MyrtleBush\{matcher}");
                     File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
                 }
             }
@@ -830,11 +584,8 @@ public class TreeGenEditor : EditorWindow
 
         if (treePresets[4] == "Olive Tree.py")
         {
-            //string rootPath = $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources";
-            //string rootPath = ImportManager.GetNameOfFile();
             string folderPath = @"\OliveTrees";
             string newPath = rootPath + folderPath;
-            //string destPath = $@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources\OliveTrees";
             string filesToDelete = @"Olive Tree*.fbx";
             string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
 
@@ -845,9 +596,6 @@ public class TreeGenEditor : EditorWindow
 
                 if (matcher.Contains("Olive Tree"))
                 {
-                    //Debug.Log("Real dal");
-                    //File.Move($@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources\{ matcher}",
-                    //$@"E:\ProceduralCityGen\ProceduralCityGen\Assets\Resources\OliveTrees\{matcher}");
                     File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
                 }
             }
@@ -855,10 +603,8 @@ public class TreeGenEditor : EditorWindow
 
         if (treePresets[5] == "Palm Tree.py")
         {
-            //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
             string folderPath = @"\PalmTree";
             string newPath = rootPath + folderPath;
-            //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\PalmTree";
             string filesToDelete = @"Palm Tree*.fbx";
             string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
 
@@ -869,9 +615,6 @@ public class TreeGenEditor : EditorWindow
 
                 if (matcher.Contains("Palm Tree"))
                 {
-                    //Debug.Log("Real dal");
-                    //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-                    //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\PalmTree\{matcher}");
                     File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
                 }
             }
@@ -879,12 +622,8 @@ public class TreeGenEditor : EditorWindow
 
         if (treePresets[6] == "Sicilian Fir.py")
         {
-            //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
-            //string rootPath = $@"E:\ProceduralCityGen\ProceduralCityGen\ProceduralCityGen\Assets\Resources";
             string folderPath = @"\SicilianFir";
             string newPath = rootPath + folderPath;
-            //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\SicilianFir";
-            //string destPath = $@"E:\ProceduralCityGen\ProceduralCityGen\ProceduralCityGen\Assets\Resources\SicilianFir";
             string filesToDelete = @"Sicilian Fir*.fbx";
             string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
 
@@ -895,11 +634,6 @@ public class TreeGenEditor : EditorWindow
 
                 if (matcher.Contains("Sicilian Fir"))
                 {
-                    //Debug.Log("Real dal");
-                    //File.Move($@"E:\ProceduralCityGen\ProceduralCityGen\ProceduralCityGen\Assets\Resources\{matcher}",
-                    //$@"E:\ProceduralCityGen\ProceduralCityGen\ProceduralCityGen\Assets\Resources\SicilianFir\{matcher}");
-                    //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-                    //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\SicilianFir\{matcher}");
                     File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
                 }
             }
@@ -907,10 +641,8 @@ public class TreeGenEditor : EditorWindow
 
         if (treePresets[7] == "Stone Pine.py")
         {
-            //string rootPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources";
             string folderPath = @"\StonePine";
             string newPath = rootPath + folderPath;
-            //string destPath = $@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\StonePine";
             string filesToDelete = @"Stone Pine*.fbx";
             string[] matches = System.IO.Directory.GetFiles(rootPath, filesToDelete);
 
@@ -921,9 +653,6 @@ public class TreeGenEditor : EditorWindow
 
                 if (matcher.Contains("Stone Pine"))
                 {
-                    //Debug.Log("Real dal");
-                    //File.Move($@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\{matcher}",
-                    //$@"E:\ProceduralCtyGen\ProceduralCityGen\Assets\Resources\StonePine\{matcher}");
                     File.Move(rootPath + $@"\{ matcher}", newPath + $@"\{matcher}");
                 }
             }

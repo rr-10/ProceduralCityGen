@@ -6,9 +6,17 @@ using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Should be called something else then call it FoliageGridGen
+/// Title: FoliageGridGen
+/// Author: Remo Reji Thomas
+/// Date: 28/11/2021
+/// 
+/// This class is used in the same scene as the terrain,
+/// it pulls the x and z value of the terrain, and 
+/// depending on the number of grids to create, would do
+/// the calculations and when spawning in TreeBushGen prefabs 
+/// by number of grids, it would take the calculations and feed
+/// the value to the instantiated prefab
 /// </summary>
-
 public class FoliageGridGen : MonoBehaviour
 {
     public static FoliageGridGen gridGen;
@@ -17,7 +25,7 @@ public class FoliageGridGen : MonoBehaviour
     //private Vector3 spawnPoint;
     //[SerializeField] private GameObject mesh;
     [SerializeField] private GameObject[] trees;
-    
+
     //public GameObject tree;
     public GameObject terrain;
     public Mesh terrainMesh;
@@ -108,7 +116,7 @@ public class FoliageGridGen : MonoBehaviour
             {
                 bool hasSpawned = true;
 
-                if(hasSpawned)
+                if (hasSpawned)
                 {
                     if (grids.Count < total)
                     {
