@@ -266,14 +266,14 @@ MonoBehaviour:
   FloorPrefab: {fileID: 8292825745112667443, guid: f41ffdd6fdfb6314d970f1ec2582e222, type: 3}
   RoofPrefab: {fileID: 1445480042027225306, guid: df0db2fcebbffa742b4070745280ff8c, type: 3}
   WallsMaterials:
-  - {fileID: 2100000, guid: 40f3311cc4c68e842998b55cc5f6dbe4, type: 2}
-  - {fileID: 2100000, guid: 9b4d19d4c55dcbe4f8698e06709d6b4e, type: 2}
-  - {fileID: 2100000, guid: 074bcb301fd97c1409e3189f80f2c9c7, type: 2}
+  - {fileID: 2100000, guid: a26936158ac0c7d44b51243f09d25847, type: 2}
+  - {fileID: 2100000, guid: 81d17e07112b3ac4ba792ce862b7cc67, type: 2}
+  - {fileID: 2100000, guid: cf63313a8ce7f6d4497dccd474739372, type: 2}
   DoorMaterials:
   - {fileID: 2100000, guid: b2343769effc0ea4d8740c5c0271dca5, type: 2}
-  - {fileID: 2100000, guid: e177b8d333ff5a34e81cc15b1a0ba702, type: 2}
+  - {fileID: 2100000, guid: 074bcb301fd97c1409e3189f80f2c9c7, type: 2}
   MaximumFloors: 5
-  setDoorChance: 0.427
+  setDoorChance: 0.061
   setWindowChance: 0.423
   setBalconyChance: 0.415
   Rule: {fileID: 11400000, guid: 87a85eef4ce6e0446b84c4037b837e37, type: 2}
