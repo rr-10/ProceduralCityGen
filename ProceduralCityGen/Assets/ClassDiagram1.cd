@@ -1,0 +1,325 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Building" Collapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAIAABAAAAAAAAEACAAAAAAAA=</HashCode>
+      <FileName>Assets\Lewis\BuildingComponents\Building.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Floor" Collapsed="true">
+    <Position X="8.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEKABAAAAcAAAiAAAAACAAAAAAAAAAAAACAAAAE=</HashCode>
+      <FileName>Assets\Lewis\BuildingComponents\Floor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Roof" Collapsed="true">
+    <Position X="8.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Lewis\BuildingComponents\Roof.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Room" Collapsed="true">
+    <Position X="10" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAgAAAAAAAAgAAAAAAAAAABAgCAIAA=</HashCode>
+      <FileName>Assets\Lewis\BuildingComponents\Room.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Wall" Collapsed="true">
+    <Position X="10" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Assets\Lewis\BuildingComponents\Wall.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EditorBuildingGen" Collapsed="true">
+    <Position X="11.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAADCAAAAAAAAAAQAICgFAAAAACAAgQAAMAQAACAg=</HashCode>
+      <FileName>Assets\Lewis\EditorBuildingGen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GenerateBuilding" Collapsed="true">
+    <Position X="11.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAACAAIAEUEAAQAgBCBIAACAQAASIYABFAAAEBBAEA=</HashCode>
+      <FileName>Assets\Lewis\GenerateBuilding.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GridSpawnBuilding" Collapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAACAAAAAAAAAAQAAAAAAAABIAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Lewis\GridSpawnBuilding.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SetBuildingMaterial" Collapsed="true">
+    <Position X="11.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIBIAAAAAAAABAACAAAAAA=</HashCode>
+      <FileName>Assets\Lewis\Prefabs\SetBuildingMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BasicRules">
+    <Position X="0.5" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAACCAAAAAAAgAAIIAAEgAgAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Assets\Lewis\Rules\BasicRules.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RuleBase">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Assets\Lewis\Rules\RuleBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastNoise" Collapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>8ETzACABYhJScKhROEcAGEAsrARqMJgA5waBASUTQq0=</HashCode>
+      <FileName>Assets\Liam\References\FastNoise.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Building_Generator" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAAAAAAAAAAAAAACAAQAAAAACAAAAAgAEAAAAAAAA=</HashCode>
+      <FileName>Assets\Liam\Scripts\Building_Generator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Display_Map" Collapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAEAAAAAAAAAgAAAAAAABAAAAAAAACAAAAAAgA=</HashCode>
+      <FileName>Assets\Liam\Scripts\Display_Map.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Erosion" Collapsed="true">
+    <Position X="4.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAIAAgAAAAACAkkBgAAgAgAABQAABAAAQAAAkIAAAA=</HashCode>
+      <FileName>Assets\Liam\Scripts\Erosion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Map_Generation" Collapsed="true">
+    <Position X="6.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AVCIRBCCBAUAABAAAFUBQmQBI4AAYAAAAASAAAABBEA=</HashCode>
+      <FileName>Assets\Liam\Scripts\Map_Generation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapMeshGenertion" Collapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Liam\Scripts\MapMeshGenertion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DataMesh" Collapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAgAAABAAAAQAAgAAAQAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Liam\Scripts\MapMeshGenertion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mouselook" Collapsed="true">
+    <Position X="11.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAACAAACAAAAAAAAAAAAgAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Assets\Liam\Scripts\Mouselook.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="movement" Collapsed="true">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAEAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Assets\Liam\Scripts\movement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Noise_Maps" Collapsed="true">
+    <Position X="4.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Liam\Scripts\Noise_Maps.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Textures" Collapsed="true">
+    <Position X="3" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Liam\Scripts\Textures.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Vegation">
+    <Position X="19.5" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAIAAAAAAgAA=</HashCode>
+      <FileName>Assets\Liam\Scripts\Vegation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="bushCreateIterations" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="FoliageGridGen">
+    <Position X="26" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAUAAwBAACJAQAAAAAAAAABAAAAAAAKEAEAAIABAAEA=</HashCode>
+      <FileName>Assets\Remo\Scripts\FoliageGridGen.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="gridPrefab" />
+      <Field Name="terrainMesh" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ImportFiles">
+    <Position X="19.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Remo\Scripts\ImportFiles.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="PackagePath" />
+      <Field Name="ResourcesPath" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TreeBushGen">
+    <Position X="28.75" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAgIAICIAQEACAAQAAABAEAAICIaAAEAAoAQAwEA=</HashCode>
+      <FileName>Assets\Remo\Scripts\TreeBushGen.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="terrainBiomes" />
+      <Field Name="hasCreated" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="OutputCmd">
+    <Position X="24" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAACEAAAAAAAAAAAAAAAAAAAAAAAEBAA=</HashCode>
+      <FileName>Assets\Remo\Scripts\TreeGenEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="App">
+    <Position X="20.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAAAAQAAAAAAAACACAAAAAI=</HashCode>
+      <FileName>Assets\Remo\Scripts\TreeGenEditor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BlenderApp" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ImportManager">
+    <Position X="26.25" Y="12.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAIAAAAAAAACAAAAQCAAAAAAEACBAAYAAEAAAAE=</HashCode>
+      <FileName>Assets\Remo\Scripts\TreeGenEditor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="acceptedExt" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="EditorWindowParameters">
+    <Position X="22.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAACgAAAAAAAAAAAAI=</HashCode>
+      <FileName>Assets\Remo\Scripts\TreeGenEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WindowManager">
+    <Position X="21.5" Y="12.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAYACAAIAAQCAAEAACAAgAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Assets\Remo\Scripts\TreeGenEditor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="editorParams" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TreeGenEditor">
+    <Position X="24.5" Y="12.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="TreeGenEditor.PresetValues">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Remo\Scripts\TreeGenEditor.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AgAEAQAAAAAAAAAAAAACAAAEAAAAAAgAAAAACAAAAAA=</HashCode>
+      <FileName>Assets\Remo\Scripts\TreeGenEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.String" Collapsed="true">
+    <Position X="23" Y="7.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.804" />
+  </Class>
+  <Class Name="System.Collections.Generic.List&lt;T&gt;" Collapsed="true">
+    <Position X="26.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnityEngine.GameObject" Collapsed="true">
+    <Position X="32.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="UnityEngine.Mesh" Collapsed="true">
+    <Position X="32.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="System.Boolean" Collapsed="true">
+    <Position X="32.5" Y="7" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Int32" Collapsed="true">
+    <Position X="23.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Orientation="Bottom" Position="0.1" />
+  </Class>
+  <Struct Name="ruleWithWeight" Collapsed="true">
+    <Position X="0.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Lewis\Rules\BasicRules.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="RoofType" Collapsed="true">
+    <Position X="2.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAEAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>Assets\Lewis\BuildingComponents\Roof.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WallType" Collapsed="true">
+    <Position X="6" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAABAAAAAAAAAAAAAIAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Assets\Lewis\BuildingComponents\Wall.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WallSide" Collapsed="true">
+    <Position X="4.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAABAAQ=</HashCode>
+      <FileName>Assets\Lewis\BuildingComponents\Wall.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BuildProcess" Collapsed="true">
+    <Position X="0.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAABAAAAMAAAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Lewis\GenerateBuilding.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
