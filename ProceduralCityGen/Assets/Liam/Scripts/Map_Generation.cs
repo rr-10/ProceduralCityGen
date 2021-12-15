@@ -352,13 +352,15 @@ public class Map_Generation : MonoBehaviour
                                                 bulidingMap[y * Width + x + i] == 0)
                                             {
                                                 //loop through the verticies and set the colour to black
-                                                for (int j = 0; j < 3; j++)
+                                                if (Buildings == true)
                                                 {
-                                                    Map_Colour[(y + j) * Width + x] = Color.black;
-                                                    Map_Colour[(y + j) * Width + x + 1] = Color.black;
-                                                    Map_Colour[(y + j) * Width + x + 2] = Color.black;
+                                                    for (int j = 0; j < 3; j++)
+                                                    {
+                                                        Map_Colour[(y + j) * Width + x] = Color.black;
+                                                        Map_Colour[(y + j) * Width + x + 1] = Color.black;
+                                                        Map_Colour[(y + j) * Width + x + 2] = Color.black;
+                                                    }
                                                 }
-
                                                 //loop trhough all the height points and set them to occupied by a building
                                                 Map_Colour[(y) * Width + x] = Color.grey;
                                                 for (int j = 0; j < 4; j++)
@@ -391,7 +393,10 @@ public class Map_Generation : MonoBehaviour
                                         //if area for small buildind
                                         if (i == 1)
                                         {
-                                            Map_Colour[y * Width + x] = Color.yellow;
+                                            if (Buildings == true)
+                                            {
+                                                Map_Colour[y * Width + x] = Color.yellow;
+                                            }
                                             bulidingMap[y * Width + x] = 2;
                                             bulidingMap[(y + 1) * Width + x + 1] = 1;
                                             bulidingMap[(y + 1) * Width + x] = 1;
@@ -410,11 +415,13 @@ public class Map_Generation : MonoBehaviour
                                                 bulidingMap[y * Width + x + i] == 0 &&
                                                 (CurrentHeight - Map_Noise[x + 1, y + 1]) > -FlatLand)
                                             {
-                                                Map_Colour[y * Width + x] = Color.gray;
-                                                Map_Colour[y * Width + x + 1] = Color.red;
-                                                Map_Colour[(y + 1) * Width + x] = Color.red;
-                                                Map_Colour[(y + 1) * Width + x + 1] = Color.red;
-
+                                                if (Buildings == true)
+                                                {
+                                                    Map_Colour[y * Width + x] = Color.gray;
+                                                    Map_Colour[y * Width + x + 1] = Color.red;
+                                                    Map_Colour[(y + 1) * Width + x] = Color.red;
+                                                    Map_Colour[(y + 1) * Width + x + 1] = Color.red;
+                                                }
 
                                                 for (int j = 0; j < 3; j++)
                                                 {
